@@ -1,0 +1,12 @@
+﻿
+<button type="button" class="@(IsDisable?"disabled":string.Empty) btn btn-outline-success"
+        @onclick="@EvReload" title="اعادة تحميل">
+    <span class="fas fa-sync"></span>
+</button>
+
+@code {
+    bool mouseOver { get; set; } = false;
+    [Parameter] public EventCallback EvReload { get; set; }
+    [Parameter] public Dictionary<string, object> ModalAttr { get; set; }
+    [Parameter] public bool IsDisable { get; set; } = false;
+}

@@ -1,0 +1,47 @@
+﻿@using global::Health.Motabea.Core.DTOs.Patients
+
+<div class="row">
+    @if (_pBaseServ.Item.Gender==Genders.EnFmale || _pBaseServ.Item.Gender==Genders.ArFmale)
+    {
+        <div>Gender Data <hr class="dropdown-divider" /></div>
+        <div class="col-md-4">
+            <CheckBtn CheckItem="@_pDetServ.Item.Pregmant" TitleProp="Pregmant" ItemID="PatPregmant"
+                      EvGetChecked="@((chk)=>{_pDetServ.Item.Pregmant=chk;EvPatItem.InvokeAsync(_pDetServ.Item);})" />
+        </div>
+        <div class="col-md-4">
+            <CheckBtn CheckItem="@_pDetServ.Item.Lactating" TitleProp="Lactating" ItemID="PatLactating"
+                      EvGetChecked="@((chk)=>{_pDetServ.Item.Lactating=chk;EvPatItem.InvokeAsync(_pDetServ.Item);})" />
+        </div>
+    }
+     <div>Special Data <hr class="dropdown-divider" /></div>
+    <div class="col-md-3">
+        <CheckBtn CheckItem="@_pDetServ.Item.ContactToBird" TitleProp="Contact To Bird"
+                  EvGetChecked="@((chk)=>{_pDetServ.Item.ContactToBird=chk;EvPatItem.InvokeAsync(_pDetServ.Item);})" 
+                  ItemID="PatContactToBird" />
+    </div>
+    <div class="col-md-3">
+        <CheckBtn CheckItem="@_pDetServ.Item.Smoker" TitleProp="Smoker" ItemID="@PatDataFields.Smoker"
+                  EvGetChecked="@((chk)=>{_pDetServ.Item.Smoker=chk;EvPatItem.InvokeAsync(_pDetServ.Item);})"  />
+    </div>
+    <div class="col-md-3">
+        <CheckBtn CheckItem="@_pDetServ.Item.ExSmoker" TitleProp="Ex-Smoker"
+                  ReadOnly="@(!_pDetServ.Item.Smoker)" ItemID="@PatDataFields.ExSmoker"
+                  EvGetChecked="@((chk)=>{_pDetServ.Item.ExSmoker=chk;EvPatItem.InvokeAsync(_pDetServ.Item);})"  />
+    </div>
+    <div class="col-md-3">
+        <CheckBtn CheckItem="@_pDetServ.Item.PassiveSmoker" TitleProp="Passive Smoker"
+                  ReadOnly="@(!_pDetServ.Item.Smoker)" ItemID="@PatDataFields.Passive" 
+                  EvGetChecked="@((chk)=>{_pDetServ.Item.PassiveSmoker=chk; EvPatItem.InvokeAsync(_pDetServ.Item);})" />
+    </div> 
+</div>
+
+@* <SelectListComp SelectTitle="Country" EnableSelect="false" SearchID="@AddressFields.Country">
+    <ElemSelectItems>
+    @foreach (var con in _countryServ.DataList)
+    {
+    <option value="@con.CountryID" selected="@(con.CountryID==PatientItem.CountryID)">
+    @con.En_CountryName
+    </option>
+    }
+    </ElemSelectItems>
+    </SelectListComp> *@

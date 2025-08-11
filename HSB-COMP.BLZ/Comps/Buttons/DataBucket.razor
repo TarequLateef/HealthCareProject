@@ -1,0 +1,19 @@
+﻿<button type="button" class="btn hsb-save" @onmouseout=@(()=>mouseOver=false) @onmouseover=@(()=>mouseOver=true)
+        @onclick=@(()=>{showStopped=!showStopped; EvShowSopped.InvokeAsync(showStopped);})
+        title="@(showStopped?"Current":"History")" style="@(!mouseOver?
+        "color: #181934;background-color: #c7d0ff;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;":"color: #c7d0ff;background-color: #181934;")">
+    @if (showStopped)
+    {
+        <span class="fas fa-clock"></span>
+    }
+    else
+    {
+        <span class="fas fa-history"></span>
+    }
+</button>
+
+@code {
+    bool mouseOver { get; set; } = false;
+    bool showStopped = false;
+    [Parameter] public EventCallback<bool> EvShowSopped { get; set; }
+}

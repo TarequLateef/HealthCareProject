@@ -1,0 +1,71 @@
+﻿<div class="row me-3 ps-4 @(ModalFormProp?"":"hsb-form-shadow pe-4 pb-3 pt-3")">
+    <div class="row justify-content-start hsb-bg-title pb-2 pt-2 ">
+        <div class="col-md-1 @(WithPagingProp?"":"offset-md-7")">
+            @if (!string.IsNullOrEmpty(ListLinkProp))
+            {
+                <ListBtn TitleProp="عرض القائمة" ListLinkProp="@ListLinkProp"
+                         WithSearchProp=WithSearchList />
+            }
+        </div>
+        @if (WithPagingProp)
+        {
+            <div class="col-md-7">
+                <DetailsPaging CurrIndex="@(selectedIndex)" ListCount="ItemsCount"
+                               EvChangeItem="ChangeIndex" SearchTitle="@NavTitleProp" />
+            </div>
+        }
+        <div class="col-md-1">
+            @if (!ModalFormProp)
+            {
+                if (!string.IsNullOrEmpty(CreateLinkProp))
+                {
+                    <CreateBtn CreateLinkProp="@CreateLinkProp" />
+                }
+                else if (WithCreatProp)
+                {
+                    <CreateBtn WithModal="true" EvCreate="@(()=>EvCreate.InvokeAsync())"
+                               ModalID="@ItemIDProp">
+                        <ElemCreateProp>
+                            @ElemUpdate
+                        </ElemCreateProp>
+                    </CreateBtn>
+                }
+            }
+        </div>
+        <div class="col-md-1">
+            @if (!string.IsNullOrEmpty(UpdateLinkProp))
+            {
+                <UpdateBtn UpdateLinkProp="@UpdateLinkProp" ItemIDProp="@ItemIDProp" />
+            }
+            @if (WithUpdateProp)
+            {
+                <UpdateBtn ItemIDProp="@ItemIDProp" 
+                           EvUpdate="@((upItem)=>EvUpdateItem.InvokeAsync(upItem))">
+                    <ElemUpdateProp>
+                        @ElemUpdate
+                    </ElemUpdateProp>
+                </UpdateBtn>
+            }
+        </div>
+        <div class="col-md-1">
+            @if (WithDataStatusProp)
+            {
+                <StopRestBtn WithAvalProp="AvalData" ItemIDProp="@ItemIDProp"
+                             EvRestore="ResotreOrStop" MessageProp="@MsgProp" />
+            }
+        </div>
+        <div class="col-md-1">
+            @if (!AvalData)
+            {
+                <DeleteBtn Deletable="DeletableData" EvDelete="DeleteItem" MessageProp="@MsgProp"
+                           ItemIDProp="@ItemIDProp" />
+            }
+        </div>
+    </div>
+    <div class="row hsb-form-back pt-4  pe-5">
+        @ElemData
+    </div>
+    <div class="row justify-content-center pb-2 pt-2 " style="background-color:#cad7c0;">
+        @ElemTabs
+    </div>
+</div>

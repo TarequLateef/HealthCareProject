@@ -1,0 +1,118 @@
+﻿@page "/PatBaseData"
+@page "/PatBaseData/{pb}/{pd}"
+
+@using global::Health.Motabea.Core.Models.Patients
+
+<div class="row justify-content-center">
+    <div class="@(WithModal?"":"col-md-8")">
+        <DataForm ModalFormProp="WithModal" ItemIDProp="@_pBaseServ.Item.PatientID"
+                  WithPagingProp="true" WithDataStatusProp="false" SelectedIndex="currIndx"
+                  ItemsCount="_pBaseServ.OperationList.Count" EvNavigateItem="NavPats"
+                  ListLinkProp="@_bServ.ListWin" WithSearchList="false">
+            <ElemData>
+                <div class="col-md-6">
+                    <InfoData InputValue="@_pBaseServ.Item.PatientName" TitleProp="Patient Name" />
+                </div>
+                <div class="col-md-4 offset-md-2">
+                    <InfoData InputValue="@_pBaseServ.Item.Phone" TitleProp="Contact" />
+                </div>
+                <div class="col-md-4">
+                    <InfoData InputValue="@_pBaseServ.Item.PatientCode" TitleProp="Code" />
+                </div>
+                <div class="col-md-8 text-center">
+                    <BarcodeData InputValue="@_pBaseServ.Item.PatientCode" FontSize="40px;" />
+                </div>
+                <div class="col-md-10">
+                    @if(_pMedServ.DataList.Any())
+                    {
+                        <ShortInput TitleProp="Reply After" InputValue="@replyDay" EvDone="AddNewBook"
+                                    EvGetValue="@((rep)=>_bServ.Item.StartDate = BookItem.StartDate.AddDays(Convert.ToDouble(rep)))" />
+                    }
+                </div>
+            </ElemData>
+            <ElemTabs>
+                <DataTabs CurrTab="@currTab" TabList="@PatTabs" EvChangeTab="@((tab)=>currTab=tab)" />
+                @if (currTab==PatTabs[0])
+                {
+                    <PatientDataInfo PatBookItem="@BookItem" pdID="@_pBaseServ.Item.PatientID"
+                                     EvDone="LoaadTabs" />
+                }
+                @if (_pDetServ.Item.PatientID is not null)
+                {
+                    if (currTab==exTabs[0])
+                    {
+                        @if (ShowAddSymp)
+                        {
+                            <PatSympAdd ModalForm="true" PatBookItem="@BookItem" patSymID="@patSymID"
+                                        EvHideForm="@((frm)=>ShowAddSymp=!frm)" />
+                        }
+                        else
+                        {
+                            <PatSympList SympDate="@BookItem.StartDate" PatItem="@_pBaseServ.Item"
+                                         EvShowAdd="@((add)=>ShowAddSymp=add)" PatBookItem="@BookItem" />
+                        }
+                    }
+                    else if (currTab==exTabs[1])
+                    {
+                        if (ShowAddBio)
+                        {
+                            <PatBioAdd ModalForm="ShowAddBio" PatBookItem="@BookItem"
+                                       patBioID="@patBioID" EvHideBio="@((frm)=>ShowAddBio=!frm)" />
+                        }
+                        else
+                        {
+                            <PatBioList BioDate="@BookItem.StartDate" PatItem="@_pBaseServ.Item" 
+                                        EvShowAdd="@((add)=>ShowAddBio=add)" PatBookItem="@BookItem" />
+                        }
+                    }
+                    else if (currTab==exTabs[2])
+                    {
+                        if (ShowAddAnal)
+                        {
+                            <NewPatAnal ModalForm="ShowAddAnal" PatBookItem="@BookItem"
+                                        patAnalID="@patAnalID" EvHideForm="@((frm)=>ShowAddAnal=!frm)" />
+                        }
+                        else
+                        {
+                            <PatAnalList AnalDate="@BookItem.StartDate" PatItem="@_pBaseServ.Item"
+                                         EvShowAdd="@((add)=>ShowAddAnal=add)" PatBookItem="@BookItem" />
+                        }
+                    }
+                    else if (currTab==exTabs[3])
+                    {
+                        if (ShowAddCT)
+                        {
+                            <AddPatCt ModalForm="ShowAddCT" PatBookItem="@BookItem"
+                                      patCtID="@patCtID" EvHideForm="@((frm)=>ShowAddCT=!frm)" />
+                        }
+                        else
+                        {
+                            <PatCtList CtDate="@BookItem.StartDate" PatItem="@_pBaseServ.Item"
+                                       EvShowAdd="@((add)=>ShowAddCT=add)" PatBookItem="@BookItem" />
+                        }
+                    }
+                    else if (currTab==exTabs[4])
+                    {
+                        if (ShowAddRay)
+                        {
+                            <AddPatRay ModalForm="ShowAddRay" PatBookItem="@BookItem"
+                                       patRayID="@patCtID" EvHideForm="@((frm)=>ShowAddRay=!frm)" />
+                        }
+                        else
+                        {
+                            <PatRayList RayDate="@BookItem.StartDate" PatItem="@_pBaseServ.Item"
+                                        EvShowAdd="@((add)=>ShowAddRay=add)" PatBookItem="@BookItem" />
+                        }
+                    }
+                    else if (currTab==exTabs[5])
+                    {
+                        <PatMedList MedDate="@BookItem.StartDate" PatItem="@_pBaseServ.Item"
+                                    PatBookItem="@BookItem" />
+                    }
+
+                }
+            </ElemTabs>
+        </DataForm>
+    </div>
+</div>
+

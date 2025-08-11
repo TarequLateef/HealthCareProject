@@ -1,0 +1,15 @@
+﻿ 
+<button type="submit" class="@(IsDisable?"disabled":string.Empty) btn "
+        @onmouseout=@(()=>mouseOver=false) @onmouseover=@(()=>mouseOver=true)
+        style="@(!mouseOver?"color: #dfdfa1;background-color: #57a349;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"color: #57a349;background-color: #dfdfa1; ")" @onclick="SaveOper" title="حفظ" @attributes=@ModalAttr>
+    <span class="fas fa-thumbs-up"></span>
+</button>
+
+@code {
+    bool mouseOver { get; set; } = false;
+    [Parameter] public EventCallback EvSave{ get; set; }
+    [Parameter] public Dictionary<string, object> ModalAttr { get; set; } = new Dictionary<string, object>();
+    [Parameter] public bool IsDisable { get; set; } = false;
+    void SaveOper() => EvSave.InvokeAsync();
+}

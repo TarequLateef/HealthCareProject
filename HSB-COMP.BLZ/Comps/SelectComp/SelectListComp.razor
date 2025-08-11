@@ -1,0 +1,99 @@
+﻿
+<div class="row @(WithFullSize?"col-md-11":"col-md-8")">
+    <div class="input-group input-group-md mb-3">
+        <span class="input-group-text position-relative" style="background-color:#0f482e; color:#e5e5b4;">
+            @if (!WithIconProp)
+            {
+                <strong>@SelectTitle</strong>
+            }
+            else
+            {
+                <span class="fas @IconClassProp" title="@SelectTitle"></span>
+            }
+            @if (!string.IsNullOrEmpty(ItemsCount))
+            {
+                <span class="position-absolute top-0 start-0 translate-middle badge bg-success border border-light rounded-circle">
+                    @ItemsCount
+                    <span class="visually-hidden">unread messages</span>
+                </span>
+            }
+        </span>
+        @if (WithAddProp)
+        {
+            if (!searcing )
+            {
+                if (string.IsNullOrEmpty(AddLinkProp))
+                {
+                    if (WithAddModal)
+                    {
+                        <CreateBtn EvCreate="@(()=>EvAddItem.InvokeAsync())" ModalID="@SearchID">
+                            <ElemCreateProp>
+                                @ElemAddModal
+                            </ElemCreateProp>
+                        </CreateBtn>
+                    }
+                    else
+                    {
+                        <ShortInput SubContent="true" EvOperation="@((oper)=>{newValue=string.Empty;adding=oper;})"
+                                    WithTitle="false" EvDone="@((oper)=>{adding=oper; EvAddItem.InvokeAsync(newValue);})"
+                                    InputValue="@newValue" EvGetValue="@((val)=>newValue=val)"
+                                    PlaceHolder="@("Add " + SelectTitle)" TitleProp="@("Add " + SelectTitle)" />
+                    }
+                }
+                else
+                {
+                    <ShortInput SubContent="true" WithTitle="false" TitleProp="@("Add " + SelectTitle)" 
+                                AddLinkProp="@AddLinkProp" />
+                }
+
+            }    
+        }
+
+        @if (WithUpdateProp)
+        {
+            if (!searcing)
+            {
+                if (string.IsNullOrEmpty(UpdateLinkProp))
+                {
+                    <UpdateBtn ItemIDProp="@SearchID" EvUpdate=@((itemID)=>EvUpdateItem.InvokeAsync(itemID)) >
+                        <ElemUpdateProp>
+                            @ElemUpdateModal
+                        </ElemUpdateProp>
+                    </UpdateBtn>
+                }
+                else
+                {
+                    <UpdateBtn />
+                }
+            }
+        }
+
+        @if (!(adding || searcing))
+        {
+            <select class="form-control " @bind="selectValue" disabled="@(!EnableSelect)">
+                <option value="0" selected="@(selectValue=="0")">@("Select " + SelectTitle)</option>
+                @ElemSelectItems
+            </select>
+            @if (WithSelectLock)
+            {
+                <span class="input-group-text btn-info" title="فتح" @onclick="ChangeSlectParam">
+                    <span class="fas text-danger @(!EnableSelect?"fa-lock":"fa-lock-open")"></span>
+                </span>
+            }
+
+            @if (!string.IsNullOrEmpty(InfoLinkProp))
+            {
+                <InfoBtn DetailWinProp="@InfoLinkProp" />
+            }
+        }
+        @if (WithSearchProp && !adding)
+        {
+            <ShortInput SubContent="true" EvCancel="@((oper)=>{searcing=oper;srchValue=string.Empty;})"
+                        EvOperation="@((oper)=>{searcing=oper; srchValue=string.Empty;})"
+                        WithTitle="false" InputValue="@srchValue" EvGetValue="@((val)=> srchValue=val)"
+                        BtnType="ShortInputType.SearchBtn" PlaceHolder="@("Find " +SelectTitle)"
+                        EvDone="@((oper)=>{searcing=oper; EvSearch.InvokeAsync(srchValue);})" 
+                        TitleProp="@("Find " +SelectTitle)"/>
+        }
+    </div>
+</div>

@@ -1,0 +1,43 @@
+﻿@using HSB_COMP.BLZ.Comps
+@using Motabe.Health.BLZ.Data.Services.Patients
+@using global::Health.Motabea.Core.Models.Patients
+
+<div class="row">
+    <div class="col-md-10">
+        <SelectListComp SearchID="@BookFields.Patient" SelectTitle="Patient" 
+                        EvErrorStatus="@_bServ.ReloadErrors" EvSelectItem="SelectPatient"
+                        WithAddProp="true" WithAddModal="true" WithSearchProp="true"
+                        EvSearch="SearchPatient" ItemsCount="@_pBaseServ.DataList.Count.ToString()"
+                        EvAddItem="@(()=>showAddPat=true)" EvUpdateItem="@(()=>showUpdPat=true)"
+                        WithUpdateProp="@(!string.IsNullOrEmpty(BookItem.PatientID))">
+            <ElemSelectItems>
+                @foreach (var pat in _pBaseServ.DataList)
+                {
+                    <option value="@pat.PatientID" selected="@(pat.PatientID==BookItem.PatientID)"
+                            class="@(_pDetServ.OperationList.Any(pd=>pd.PatientID==pat.PatientID)?"bg-secondary bg-opacity-25":"")">
+                        @pat.PatientName
+                    </option>
+                }
+            </ElemSelectItems>
+            <ElemAddModal>
+                @if (showAddPat)
+                {
+                    <AddPatientBase ShowAsModal="true" ExitLink="@_bServ.AddWin"
+                                    EvAfterSave="PatToList" />
+                }
+            </ElemAddModal>
+            <ElemUpdateModal>
+                @if (showUpdPat)
+                {
+                    <AddPatientBase ShowAsModal="true" ExitLink="@_bServ.AddWin"
+                                    PatientItem="@_pBaseServ.Item" EvAfterSave="UpdatePatList"/>
+                }
+            </ElemUpdateModal>
+        </SelectListComp>
+        <div class="col-md-8">
+            <TextInput InputData="@InputType.DateType" InputID="@BookFields.Date" 
+                       InputValue="@BookItem.StartDate.ToString("yyyy-MM-dd")" TitleProp="Book Date"
+                       EvGetValue="SetBookDate"  />
+        </div>
+    </div>
+</div>

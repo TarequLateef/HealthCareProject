@@ -1,0 +1,47 @@
+﻿
+<div class="input-group input-group-md mb-3">
+    <span class="input-group-text" style="background-color:#0f482e; color:#e5e5b4;">
+        @if (!WithIconProp)
+        {
+            @TitleProp
+        }
+        else
+        {
+            <span class="fas @IconClassProp" title="@TitleProp"></span>
+        }
+    </span>
+    <input type="@InputData" class="form-control" aria-label="Sizing example input" @bind="@txtData"
+           placeholder="@(InputData == InputType.EMailType?"username@domain.com":PlaceHolder)"
+           maxlength="@(FieldLength==0?100:FieldLength)" readonly="@(WithLimitList)"/>
+    @if (errorStatus.Done)
+    {
+        <span class="input-group-text" style="background-color:#c9ddd4; color:#21991f;">
+            <span class="fas fa-check-circle"></span>
+        </span>
+    }
+    @if (WithLimitList)
+    {
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false" @onmouseout=@(()=>mouseOver=false) @onmouseover=@(()=>mouseOver=true)
+                style="@(!mouseOver?"color: #F6F193;background-color: #d984a7;"
+        :"color: #d984a7;background-color: #F6F193;")">
+            Select @TitleProp
+        </button>
+        <ul class="dropdown-menu">
+            @foreach (var lItem in LimitList)
+            {
+                <li>
+                    <a role="button" class="dropdown-item" @onclick=@(()=>txtData=lItem)>
+                        @lItem
+                    </a>
+                </li>
+            }
+        
+        </ul>
+    }
+    @if (!string.IsNullOrEmpty(errorStatus.ErrorMessage))
+    {
+        <div class="valid-feedback" style="display:inline-block">@errorStatus.ErrorMessage</div>
+    }
+</div>
+

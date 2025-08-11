@@ -1,0 +1,18 @@
+﻿<input type="checkbox" class="btn-check" id="@ItemID" checked="@CheckItem" autocomplete="off"
+       @onchange=@(()=>{CheckItem=!CheckItem; EvGetChecked.InvokeAsync(CheckItem);}) 
+       disabled="@(ReadOnly)">
+<label class="btn" for="@ItemID" @onclick="@(()=>EvGetItemID.InvokeAsync(ItemID))"
+       style="@(CheckItem?"color: #f8efc8;background-color: #6a361d;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"color: #6a361d;background-color: #f8efc8;")">
+    @((!CheckItem ? WithAutoTitle ? "No-" : string.Empty : string.Empty)+TitleProp) 
+</label>
+
+@code {
+    [Parameter] public string ItemID { get; set; } = string.Empty;
+    [Parameter] public string TitleProp { get; set; } = string.Empty;
+    [Parameter] public bool CheckItem { get; set; } = true;
+    [Parameter] public bool ReadOnly { get; set; } = false;
+    [Parameter] public bool WithAutoTitle { get; set; } = true;
+    [Parameter] public EventCallback<bool> EvGetChecked { get; set; }
+    [Parameter] public EventCallback<string> EvGetItemID{ get; set; }
+}

@@ -1,0 +1,78 @@
+﻿@using GeneralMotabea.Core.DTOs
+@using global::Health.Motabea.Core.DTOs.Patients
+
+<div class="row justify-content-center">
+    <div class="com-md-6">
+        <TextInput TitleProp="@(docRole?PatBaseTitle.EnName:PatBaseTitle.ArName)"
+                   InputValue="@_pBaseServ.Item.PatientName"
+                   EvErrorStatus="@_pBaseServ.ReloadErrors" EvGetValue="SetName"
+                   InputID="@PatBaseFields.Name" PlaceHolder="Patient Name" />
+    </div>
+    <div class="com-md-6">
+        <TextInput TitleProp="@(docRole?PatBaseTitle.EnPhone:PatBaseTitle.ArPhone)"
+                   InputValue="@_pBaseServ.Item.Phone" IsNumber="true"
+                   EvErrorStatus="@_pBaseServ.ReloadErrors" EvGetValue="SetPhone" FieldLength="11"
+                   InputID="@PatBaseFields.Phone" PlaceHolder="Contact Phone" ExErrStatus="@phoneErr"/>
+    </div>
+    <div>Address <hr class="dropdown-divider" /></div>
+    <SelectListComp SelectTitle="@(docRole?PatBaseTitle.EnGov:PatBaseTitle.ArGov)"
+                    EnableSelect="searchGovern" WithSelectLock="true"
+                    SearchID="@AddressFields.Govern" WithSearchProp="searchGovern"
+                    EvEnableSelect="GetGovernList" EvSelectItem="SelectGover"
+                    EvSearch="@((srch)=>_govServ.DataList=_govServ.OperationList.Where(g=>g.EN_GovName.Contains(srch)).ToList())"
+                    EvErrorStatus="@_pBaseServ.ReloadErrors">
+        <ElemSelectItems>
+            @foreach (var gov in _govServ.DataList)
+            {
+                <option value="@gov.ConvernID" selected="@(gov.ConvernID==PatBaseItem.GovernID)">
+                    @gov.AR_GovName
+                </option>
+            }
+        </ElemSelectItems>
+    </SelectListComp>
+    <SelectListComp SelectTitle="@(docRole?PatBaseTitle.EnCity:PatBaseTitle.ArCity)"
+                    SearchID="@AddressFields.City" WithSearchProp="true"
+                    EvSearch="@((srch)=>_cityServ.DataList=_cityServ.OperationList.Where(c=>c.En_CityName.Contains(srch)).ToList())"
+                    EvErrorStatus="@_pBaseServ.ReloadErrors" EvSelectItem="SelectCity">
+        <ElemSelectItems>
+            @foreach (var city in _cityServ.DataList)
+            {
+                <option value="@city.CityID" selected="@(city.CityID==PatBaseItem.CityID)">
+                    @city.Ar_CityName
+                </option>
+            }
+        </ElemSelectItems>
+    </SelectListComp>
+    <div>Personal Data <hr class="dropdown-divider" /></div>
+    <div class="col-md-4">
+        <TextInput TitleProp="@(docRole?PatBaseTitle.EnAge:PatBaseTitle.ArAge)"
+                   EvErrorStatus="@_pBaseServ.ReloadErrors" InputID="@PatDataFields.Age"
+                   InputValue="@Age" EvGetValue="SetAge" IsNumber="true" />
+    </div>
+    <div class="col-md-8">
+        <TextInput TitleProp="@(docRole?PatBaseTitle.EnGender:PatBaseTitle.ArGender)"
+                   WithLimitList="true" InputID="@PatDataFields.Gender" EvGetValue="GetGender"
+                   EvErrorStatus="@_pBaseServ.ReloadErrors" InputValue="@_pBaseServ.Item.Gender"
+                   LimitList="@(docRole?gen.EnGenderList:gen.ArGenderList)" />
+    </div>
+    <SelectListComp SelectTitle="@(docRole?PatBaseTitle.EnWork:PatBaseTitle.ArWork)"
+                    EvSelectItem="SelectWork" SearchID="@PatDataFields.Work"
+                    EvErrorStatus="@_pBaseServ.ReloadErrors" WithAddProp="true" EvAddItem="AddWork"
+                    EvSearch="@((src)=>_workServ.DataList=_workServ.OperationList.Where(w=>w.WorkName.Contains(src)).ToList())" WithSearchProp="true"
+                    WithFullSize="false">
+        <ElemSelectItems>
+            @foreach (var w in _workServ.DataList)
+            {
+                <option value="@w.WorkID" selected="@(w.WorkID==PatBaseItem.WorkID)">
+                    @w.WorkName
+                </option>
+            }
+        </ElemSelectItems>
+    </SelectListComp>
+    <div class="col-md-4">
+        <CheckBtn TitleProp="@(docRole?PatBaseTitle.EnOccup:PatBaseTitle.ArOccup)"
+                  CheckItem="@PatBaseItem.Occup"
+                  EvGetChecked="@((ch)=>{PatBaseItem.Occup=ch;EvPatItem.InvokeAsync(PatBaseItem);})"
+                  ItemID="@PatDataFields.Occup" />
+    </div>
+</div>

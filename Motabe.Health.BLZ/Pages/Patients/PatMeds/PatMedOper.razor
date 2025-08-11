@@ -1,0 +1,43 @@
+﻿@using HSB_COMP.BLZ.Comps
+@using global::Health.Motabea.Core.DTOs.Patients
+
+<div class="row">
+    <SelectListComp SelectTitle="Medicine" WithAddModal="true" WithAddProp="true" WithSearchProp="true"
+                    EvAddItem="@(()=>showAdd=true)" EvErrorStatus="@_pMedServ.ReloadErrors"
+                    EvSelectItem="SelectMed" SearchID="@PatMedFields.Name"
+                    EvSearch="@((src)=>_medServ.DataList=_medServ.OperationList.Where(m=>m.MedName.Contains(src)).ToList())">
+        <ElemSelectItems>
+            @foreach (var bio in _medServ.DataList)
+            {
+                <option value="@bio.MedID" selected="@(bio.MedID==PatMedItem.MedID)">
+                    @(bio.MedName +"("+bio.MedType+")")
+                </option>
+            }
+        </ElemSelectItems>
+        <ElemAddModal>
+            @if (showAdd)
+            {
+                <MedOper EvAfterSave="LoadMedList" />
+            }
+        </ElemAddModal>
+    </SelectListComp>
+
+    <div class="col-md-5">
+        <TextInput TitleProp="Dose" EvGetValue="SelectDose" InputValue="@PatMedItem.Dose"
+                   InputID="@PatMedFields.Dose" IsNumber="true"/>
+    </div>
+    <div class="col-md-3">
+        <TextInput TitleProp="Period" EvGetValue="SetPatPeriod" InputValue="@PatMedItem.Period"
+                   InputID="@PatMedFields.Period" WithLimitList="true" LimitList="MedPer"/>
+    </div>
+    <div class="col-md-4 ">
+        <TextInput InputData="@InputType.DateType" InputID="@PatMedFields.Date" TitleProp="Date"
+                   InputValue="@( string.IsNullOrEmpty(BookItem.BookID)?DateTime.Now.ToString("yyyy-MM-dd"):BookItem.StartDate.ToString("yyyy-MM-dd"))"
+                   EvGetValue="SetPatDate" />
+    </div>
+    <div class="col-md-12">
+        <TextInput TitleProp="Note" EvGetValue="SetPatMedNote" InputValue="@PatMedItem.Note"
+                   InputID="@PatMedFields.Note" />
+    </div>
+</div>
+

@@ -1,0 +1,62 @@
+﻿@page "/PatientDataDet/{pdID}"
+@using global::Health.Motabea.Core.DTOs.Patients
+
+<DataForm WithPagingProp="false" TitleProp="Patient Data" WithDataStatusProp="false" ItemIDProp="@pdID"
+          WithUpdateProp="@(_pDetServ.Item.PatientID is not null)" EvUpdateItem="@((id)=>upId=id)"
+          WithCreatProp="@(_pDetServ.Item.PatientID is null)" 
+          EvCreate="@(()=>upId=_pBaseServ.Item.PatientID)">
+    <ElemData>
+        @if (_pBaseServ.Item.Gender==Genders.EnFmale || _pBaseServ.Item.Gender==Genders.ArFmale)
+        {
+            <div>Gender Data <hr class="dropdown-divider" /></div>
+            <div class="col-md-3 offset-md-6">
+                <InfoData TitleProp="Pregmant"
+                          InputValue="@(_pDetServ.Item.Pregmant?"Yes":"No")" />
+            </div>
+            <div class="col-md-3">
+                <InfoData TitleProp="Lactating"
+                          InputValue="@(_pDetServ.Item.Lactating?"Yes":"No")" />
+            </div>
+        }
+        <div>Special Data <hr class="dropdown-divider" /></div>
+        <div class="col-md-3">
+            <InfoData TitleProp="Smoker"
+                      InputValue="@(_pDetServ.Item.Smoker?"Yes":"No")" />
+        </div>
+        <div class="col-md-3 offset-md-1">
+            <InfoData TitleProp="Ex-Smoker"
+                      InputValue="@(_pDetServ.Item.ExSmoker?"Yes":"No")"/>
+        </div>
+        <div class="col-md-4  offset-md-1">
+            <InfoData TitleProp="Passive Smoker"
+                      InputValue="@(_pDetServ.Item.PassiveSmoker?"Yes":"No")" />
+        </div>
+        <div class="col-md-4">
+            <InfoData TitleProp="Contact To Bird"
+                      InputValue="@(_pDetServ.Item.ContactToBird?"Yes":"No")" />
+        </div>
+        <div>Work Data <hr class="dropdown-divider" /></div>
+        <div class="col-md-4">
+            <InfoData TitleProp="Work" InputValue="@_wServ.Item.WorkName" />
+        </div>
+        <div class="col-md-4">
+            <InfoData TitleProp="Age"
+                      InputValue="@((DateTime.Now.Year-_pBaseServ.Item.AgeDate.Year).ToString())" />
+        </div>
+        <div class="col-md-4 ">
+            <InfoData TitleProp="Occupation"
+                      InputValue="@(_pBaseServ.Item.Occup?"Occupation":"Not-Occupation")" />
+        </div>
+        <div>Address <hr class="dropdown-divider" /></div>
+        <InfoData TitleProp="Location"
+                  InputValue="@(_gServ.Item.EN_GovName + " " + _cityServ.Item.En_CityName)" />
+
+    </ElemData>
+    <ElemUpdate>
+        @if (upId==_pBaseServ.Item.PatientID)
+        {
+            <PatientDataAdd PatBookItem="@PatBookItem" pBaseID="@upId"
+                            EvHide="@((hide)=>EvDone.InvokeAsync(hide))" />
+        }
+    </ElemUpdate>
+</DataForm>

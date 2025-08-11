@@ -1,0 +1,87 @@
+﻿
+<div class="row mb-3">
+    <div class="col-md-1 offset-md-10">
+        @if (WithCreateBtn)
+        {
+            if (!string.IsNullOrEmpty(CreateWinLink))
+            {
+                <CreateBtn CreateLinkProp="@CreateWinLink" />
+            }
+            else
+            {
+                <CreateBtn EvCreate="CreateItem" ModalID="@CreateModalID">
+                    <ElemCreateProp>
+                        @if (operateCreate)
+                        {
+                            @ElemCreateProp
+                        }
+                    </ElemCreateProp>
+                </CreateBtn>
+            }
+        }
+    </div>
+</div>
+
+<table class="table caption-top">
+    <caption class="hsb-table-caption text-center">@TableCaption</caption>
+    <thead class="hsb-table-head">
+        <tr>
+            @ElemTableHead
+        </tr>
+    </thead>
+    <tbody class="table-group-divider">
+        @ElemTableBody
+    </tbody>
+</table>
+
+<div class="row justify-content-center">
+    <div class="col-md-1 offset-md-1">
+        @* For printing *@
+        @if (WithPrinting)
+        {
+            <PrintBtn />
+        }
+    </div>
+    <div class="col-md-4 @(WithRecycle?"offset-md-1":"offset-md-2")">
+        @if (withNavigation)
+        {
+            <TablePaging RowsCount="@RowsCount" RowsPerPage="@RowsPerPage" CurrPage="@CurrPage"
+                         EvChangePage="ChangePage" />
+        }
+    </div>
+    <div class="col-md-1">
+        @* For Recycleben *@
+        @if (WithRecycle)
+        {
+            <DataBucket  EvShowSopped="@((stop)=>EvShowIgnored.InvokeAsync(!stop))"/>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string CreateWinLink { get; set; } = string.Empty;
+    [Parameter] public string TableCaption { get; set; } = string.Empty;
+    [Parameter] public string CreateModalID { get; set; } = string.Empty;
+    [Parameter] public bool WithCreateBtn { get; set; } = true;
+    [Parameter] public bool WithRecycle { get; set; } = false;
+    [Parameter] public bool WithPrinting { get; set; } = false;
+    [Parameter] public int RowsCount { get; set; }
+    [Parameter] public int RowsPerPage { get; set; }
+    [Parameter] public int CurrPage { get; set; }
+    [Parameter] public RenderFragment ElemTableHead { get; set; }
+    [Parameter] public RenderFragment ElemTableBody { get; set; }
+    [Parameter] public RenderFragment ElemCreateProp { get; set; }
+    [Parameter] public EventCallback<int> EvChangePage { get; set; }
+    [Parameter] public EventCallback<bool> EvShowIgnored { get; set; }
+    [Parameter] public EventCallback EvShowCreateModal { get; set; }
+    bool operateCreate { get; set; } = false;
+    bool withNavigation => this.RowsCount > this.RowsPerPage;
+    bool showIgnored = false;
+    void CreateItem()
+    {
+        operateCreate = true;
+        EvChangePage.InvokeAsync();
+        EvShowCreateModal.InvokeAsync();
+    }
+    void ChangePage(int pg) { EvChangePage.InvokeAsync(pg); CurrPage = pg; }
+}

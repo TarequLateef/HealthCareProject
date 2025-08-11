@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\External\Work.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces\Service\" />
+    <Folder Include="Models\External\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\UserManagement\GeneralMotabea\GeneralMotabea.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="UserManagement.Core">
+      <HintPath>..\..\UserManagement\UserManagement.Core\obj\Debug\net7.0\ref\UserManagement.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

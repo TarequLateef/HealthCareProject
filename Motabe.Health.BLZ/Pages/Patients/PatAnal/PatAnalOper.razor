@@ -1,0 +1,38 @@
+﻿@using HSB_COMP.BLZ.Comps
+@using global::Health.Motabea.Core.DTOs.Patients
+
+<div class="row">
+    <SelectListComp SelectTitle="Analysis" WithAddModal="true" WithAddProp="true"
+                    EvAddItem="@(()=>showAdd=true)" EvErrorStatus="@_pAnalServ.ReloadErrors"
+                    EvSelectItem="SelectAnal" SearchID="@PatAnalFields.Anal">
+        <ElemSelectItems>
+            @foreach (var bio in _analServ.DataList)
+            {
+                <option value="@bio.AnalysisID" selected="@(bio.AnalysisID==PatAnalItem.AnalysisID)">
+                    @bio.AnalysisName
+                </option>
+            }
+        </ElemSelectItems>
+        <ElemAddModal>
+            @if (showAdd)
+            {
+                <AnalOper EvAfterSave="LoadBioList"/>
+            }
+        </ElemAddModal>
+    </SelectListComp>
+
+    <div class="col-md-5">
+        <TextInput TitleProp="Lab Name" EvGetValue="SetPatLab" InputValue="@PatAnalItem.LabName"
+                   InputID="@PatAnalFields.Result" />
+    </div>
+    <div class="col-md-4 offset-md-3">
+        <TextInput InputData="@InputType.DateType" InputID="@PatBioFields.Date" TitleProp="Date"
+                   InputValue="@( string.IsNullOrEmpty(BookItem.BookID)?DateTime.Now.ToString("yyyy-MM-dd"):BookItem.StartDate.ToString("yyyy-MM-dd"))"
+                   EvGetValue="SetPatDate" />
+    </div>
+    <div class="col-md-12">
+        <TextInput TitleProp="Result" EvGetValue="SelectResult" InputValue="@PatAnalItem.AnalResult"
+                   InputID="@PatAnalFields.Result" />
+    </div>
+</div>
+

@@ -1,0 +1,28 @@
+﻿<nav aria-label="Page navigation example ">
+    <ul class="pagination justify-content-center">
+        <li class="page-item disabled">
+            <a role="button" class="page-link hsb-paging">Previous</a>
+        </li>
+        @for (int i = 1; i <= PagesCount; i++)
+        {
+            int p = i;
+            <li class="page-item">
+                <a role="button" class="page-link @(CurrPage==p?"hsb-active":"hsb-paging")"
+                   @onclick="@(()=>{CurrPage=p;EvChangePage.InvokeAsync(p);})">
+                    @p
+                </a>
+            </li>
+        }
+        <li class="page-item">
+            <a role="button" class="page-link hsb-paging" >Next</a>
+        </li>
+    </ul>
+</nav>
+
+@code {
+    [Parameter] public int RowsCount { get; set; } = 1;
+    [Parameter] public int RowsPerPage { get; set; } = 1;
+    [Parameter] public int CurrPage { get; set; } = 1;
+    [Parameter] public EventCallback<int> EvChangePage { get; set; }
+    int PagesCount => RowsCount%RowsPerPage>0 ? ((int)RowsCount/RowsPerPage)+1 : (int)RowsCount/RowsPerPage;
+}

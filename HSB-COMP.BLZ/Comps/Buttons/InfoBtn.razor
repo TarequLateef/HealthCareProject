@@ -1,0 +1,45 @@
+﻿ 
+@if (string.IsNullOrEmpty(DetailWinProp))
+{
+    <button type="button" class="btn hsb-info" @onclick=@(()=>EvGetInfo.InvokeAsync()) title="@TitleProp"
+            style="@(!mouseOver?"color: #fdf5da;background-color: #d98488;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"color: #d98488;background-color: #fdf5da;")" @onmouseover=@(()=>mouseOver=true)
+            @onmouseout=@(()=>mouseOver=false) data-bs-target="#info_@ItemIDProp" data-bs-toggle="modal">
+        <span class="fas fa-info-circle"></span>
+    </button>
+    <!-- Modal -->
+    <div class="modal fade" id="info_@ItemIDProp" tabindex="-1" aria-hidden="true"
+         aria-labelledby="@("info_"+ItemIDProp+"Label")" data-bs-backdrop="static"
+         style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 5px;">
+        <div class="modal-dialog modal-dialog-centered @(Size==ModalSize.Large?"modal-lg":"modal-xl")">
+            <div class="modal-content">
+                <div class="modal-body">
+                    @ElemInfProp
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <a class="btn hsb-info" @onclick=@(()=>EvGetInfo.InvokeAsync()) title="@TitleProp"
+       @onmouseover=@(()=>mouseOver=true) @onmouseout=@(()=>mouseOver=false)
+       style="@(!mouseOver?AvailableItem?"color: #fdf5da;background-color: #d98488;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"background-color: #fdf5da;color: #d98488;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :AvailableItem?"color: #d98488;background-color: #fdf5da;":"color: #fdf5da;background-color: #d98488;")"
+       href="@(DetailWinProp+"/"+ItemIDProp)">
+        <span class="fas fa-info-circle"></span>
+    </a>
+}
+@code {
+    [Parameter] public EventCallback EvGetInfo { get; set; }
+    [Parameter] public string TitleProp { get; set; }
+    [Parameter] public string ItemIDProp { get; set; } = string.Empty;
+    [Parameter] public string DetailWinProp { get; set; } = string.Empty;
+    [Parameter] public bool AvailableItem { get; set; } = true;
+    [Parameter] public bool WithModal { get; set; } = false;
+    [Parameter] public RenderFragment? ElemInfProp{ get; set; }
+    [Parameter] public string Size { get; set; } = ModalSize.Large;
+    bool mouseOver { get; set; } = false;
+}
+

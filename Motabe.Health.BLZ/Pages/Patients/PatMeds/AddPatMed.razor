@@ -1,0 +1,10 @@
+﻿
+<CreateForm ModalFormProp="ModalForm" HideModal="true" EvSave="SavePatBio"
+            DisableSave="@_pMedServ.ErrorList.Any(pB=>!pB.Done)"
+            EvExit="@(()=>EvHideForm.InvokeAsync(true))">
+    <ElemOperation>
+        <PatMedOper BookItem="@PatBookItem" PatMedItem="_pMedServ.Item"
+                    EvPatMed="@((item)=>_pMedServ.Item=item)"
+                    EvPatMedErr="@((err)=>_pMedServ.ErrorList=err)" />
+    </ElemOperation>
+</CreateForm>

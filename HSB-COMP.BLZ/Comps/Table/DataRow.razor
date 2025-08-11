@@ -1,0 +1,13 @@
+﻿
+<tr class="@(mouseOver || SelectedRow?"hsb-table-leave":"hsb-table-data")"
+    @onclick="await => EvClick.InvokeAsync()" style="@(mouseOver?"cursor:pointer":"")"
+    @onmouseover=@(()=>mouseOver=true) @onmouseout=@(()=>mouseOver=false)>
+            @ElemRowFields
+</tr>
+@code {
+    bool mouseOver { get; set; } = false;
+    [Parameter] public RenderFragment ElemRowFields{ get; set; }
+    [Parameter] public EventCallback EvClick{ get; set; }
+    [Parameter] public bool SelectedRow { get; set; } = false;
+    //    [Parameter] public string RowIDProp { get; set; }
+}

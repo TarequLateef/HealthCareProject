@@ -1,0 +1,79 @@
+﻿@using static HSB_COMP.BLZ.Comps.SelectComp.SelectListComp
+<div class="btn-group" id="@ListID">
+    <button type="button" class="btn dropdown-toggle @(!filterd?"btn-light ":"btn-danger")" data-bs-toggle="dropdown" aria-expanded="false">
+        @TitleProp
+    </button>
+    <ul class="dropdown-menu">
+        @if (DataTypes == SearchDataTypes.TextVal)
+        {
+            <li>
+                <div class="row justify-content-center">
+                    <input class="col-md-10" type="text" placeholder=" Search @TitleProp " @onchange="SearchValue" />
+                </div>
+            </li>
+            <li>
+                <div class="form-check" @onclick="ConditionCont">
+                    <input class="form-check-input" type="radio" name="chkContains" id="chkContains"
+                           checked="@(checkAcion=="Contains")">
+                    <label class="form-check-label" for="chkContains">
+                        Contains
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="form-check" @onclick="ConditionNotCont">
+                    <input class="form-check-input" type="radio" name="chkNotContains" id="chkNotContains"
+                           checked="@(checkAcion=="NotContains")">
+                    <label class="form-check-label" for="chkNotContains">
+                        Not Contains
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="form-check" @onclick="ConditionEq">
+                    <input class="form-check-input" type="radio" name="chkEqual" id="chkEqual" checked="@(checkAcion=="Equal")">
+                    <label class="form-check-label" for="chkEqual">
+                        Equal
+                    </label>
+                </div>
+            </li>
+            <li>
+                <div class="form-check" @onclick="ConditionNotEq">
+                    <input class="form-check-input" type="radio" name="chkNotEqual" id="chkNotEqual"
+                           checked="@(checkAcion=="NotEqual")">
+                    <label class="form-check-label" for="chkNotEqual">
+                        Not Equal
+                    </label>
+                </div>
+            </li>
+        }
+        else if (DataTypes==SearchDataTypes.DateVal)
+        {
+            <li>
+                <div class="row justify-content-center">
+                    <input class="col-md-10" type="date" @bind=SearchDate />
+                </div>
+            </li>
+            <li>
+                <div class="form-check" @onclick="@(()=>dCond=DateCondition.Day)">
+                    <input class="form-check-input" type="radio" name="chkDay" id="chkDay">
+                    <label class="form-check-label" for="chkDay">
+                        يوم
+                    </label>
+                </div>
+            </li>
+
+        }
+        <li>
+            <div class="row justify-content-evenly">
+                <button type="button" class="col-md-4 btn-outline-primary" @onclick="BtnSearch">
+                    <span class="fas fa-search"></span>
+                </button>
+                <button type="button" class="col-md-4 btn-outline-danger" @onclick="BtnCancelSearch">
+                    <span class="fas fa-times-circle"></span>
+                </button>
+            </div>
+        </li>
+    </ul>
+
+</div>

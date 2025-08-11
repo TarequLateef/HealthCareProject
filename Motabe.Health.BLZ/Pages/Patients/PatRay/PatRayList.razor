@@ -1,0 +1,47 @@
+﻿
+
+<DataTable CurrPage="@_pRayServ.CurrPage" EvChangePage="@_pRayServ.ChangePage"
+           RowsCount="@_pRayServ.ParentListCount" RowsPerPage="@_pRayServ.FieldsPerPage"
+           WithCreateBtn="true" TableCaption="Patient X-Rays" 
+           WithRecycle="@_pRayServ.MainList.Any(ps=>ps.StartDate.Date<ps.BookingTBL.StartDate.Date)"
+           EvShowIgnored="GetHistory" EvShowCreateModal="@(await=>EvShowAdd.InvokeAsync(true))">
+    <ElemTableHead>
+        <th>@_pRayServ.ParentListCount</th>
+        <th>X-Ray</th>
+        <th>Date</th>
+        <th>Note</th>
+        <th>Ray Description</th>
+        <th>Lab</th>
+        <th>@_pRayServ.CurrPage</th>
+    </ElemTableHead>
+    <ElemTableBody>
+        @foreach (var ps in _pRayServ.DataList)
+        {
+            <DataRow>
+                <ElemRowFields>
+                    <td>
+                        <UpdateBtn EvUpdate="SelectUpdate" ItemIDProp="@ps.PRID">
+                            <ElemUpdateProp>
+                                @if (!string.IsNullOrEmpty(currPatRayID) && ps.PRID==currPatRayID)
+                                {
+                                    <AddPatRay ModalForm="true" PatBookItem="@PatBookItem"
+                                              patRayID="@ps.PRID" EvUpdateItem="ReplaceItem" />
+                                }
+                            </ElemUpdateProp>
+                        </UpdateBtn>
+                    </td>
+                    <td>@ps.RaysTBL.RayName</td>
+                    <td>@ps.StartDate.ToString("yyyy-MM-dd")</td>
+                    <td>@ps.Descirption</td>
+                    <td>@ps.RaysTBL.Descirption</td>
+                    <td>@ps.X_Lab</td>
+                    <td>
+                        <DeleteBtn ItemIDProp="@ps.PRID" EvDelete="DeleteBio"
+                                   MessageProp="@(ps.RaysTBL.RayName)" />
+                    </td>
+                </ElemRowFields>
+            </DataRow>
+        }
+    </ElemTableBody>
+</DataTable>
+

@@ -1,0 +1,9 @@
+﻿
+<CreateForm ModalFormProp="ModalForm" EvExit="@(()=>EvHideForm.InvokeAsync(true))"
+            EvSave="SavePatCt" HideModal="false">
+    <ElemOperation>
+        <PatCtOper BookItem="@PatBookItem" PatCtItem="@_pCtServ.Item"
+                   EvPatCt="@((item)=>_pCtServ.Item=item)"
+                   EvPatCtErr="@((err)=>_pCtServ.ErrorList=err)" />
+    </ElemOperation>
+</CreateForm>

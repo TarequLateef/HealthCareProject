@@ -1,0 +1,81 @@
+﻿@using global::Health.Motabea.Core.DTOs.Patients
+@using global::Health.Motabea.Core.DTOs.Services
+
+<DataTable TableCaption="Treat List" CurrPage="_medServ.CurrPage" EvChangePage="_medServ.ChangePage"
+           RowsCount="_medServ.ParentListCount" RowsPerPage="@_medServ.FieldsPerPage"
+           WithCreateBtn="false">
+    <ElemTableHead>
+        <th>@_medServ.ParentListCount</th>
+        <th>
+            <SearchDropDwon ListID="@MedFields.Name" FieldNameProp="@MedFields.Name"
+                            EvSearching="_medServ.SearchField" TitleProp="Medicine"/>
+        </th>
+        <th>Dose</th>
+        <th>Period</th>
+        <th>Note</th>
+        <th>@_medServ.CurrPage</th>
+    </ElemTableHead>
+    <ElemTableBody>
+        @foreach (var medDose in _medServ.DataList)
+        {
+            string slctMedID = "slct"+medDose.MedID;
+            var pmedItem = _pMedServ.OperationList.Any(pm => pm.MedID == slctMedID.Substring(4)) ?
+                _pMedServ.OperationList.First(pm => pm.MedID == slctMedID.Substring(4)) : null;
+            <DataRow>
+                <ElemRowFields>
+                    <td>
+                        <CheckBtn ItemID="@(slctMedID)" WithAutoTitle="false"
+                                  TitleProp="@(chkMedID==slctMedID || _pMedServ.OperationList.Any(pm=>pm.MedID==slctMedID.Substring(4))?"Taken":medAction)"
+                                  CheckItem="@(chkMedID==slctMedID || _pMedServ.OperationList.Any(pm=>pm.MedID==slctMedID.Substring(4)))"
+                                  EvGetItemID="@((chkID)=>{chkMedID=chkID;_pMedServ.Item.MedID=chkID.Substring(4);})" />
+                    </td>
+                    <td>@(medDose.MedName +"("+medDose.MedType+")")</td>
+                    <td>
+                        @if (chkMedID==slctMedID)
+                        {
+                            <TextInput InputID="@(PatMedFields.Dose+medDose.MedID)"
+                                       InputValue="@_pMedServ.Item.Dose" PlaceHolder="Dose"
+                                       EvGetValue="@((val)=>_pMedServ.Item.Dose=val)" />
+                        }
+                        @if (_pMedServ.OperationList.Any(pm => pm.MedID==slctMedID.Substring(4)))
+                        {
+                            <InfoData InputValue="@pmedItem.Dose" />
+                        }
+                    </td>
+                    <td>
+                        @if (chkMedID==slctMedID)
+                        {
+                            <TextInput InputID="@(PatMedFields.Period+medDose.MedID)"
+                                       InputValue="@_pMedServ.Item.Period" PlaceHolder="Period"
+                                       EvGetValue="@((val)=>_pMedServ.Item.Period=val)" />
+                        }
+                        @if (_pMedServ.OperationList.Any(pm => pm.MedID==slctMedID.Substring(4)))
+                        {
+                            <InfoData InputValue="@pmedItem.Period" />
+                        }
+                    </td>
+                    <td>
+                        @if (chkMedID==slctMedID)
+                        {
+                            <TextInput InputID="@(PatMedFields.Note+medDose.MedID)"
+                                       InputValue="@_pMedServ.Item.Note" PlaceHolder="Note"
+                                       EvGetValue="@((val)=>_pMedServ.Item.Note=val)" />
+                        }
+                        @if (_pMedServ.OperationList.Any(pm => pm.MedID==slctMedID.Substring(4)))
+                        {
+                            <InfoData InputValue="@pmedItem.Note" />
+                        }
+                    </td>
+                    <td>
+                        @if (chkMedID==slctMedID)
+                        {
+                            <SaveBtn EvSave="SaveMed"/>
+                        }
+                    </td>
+                </ElemRowFields>
+            </DataRow>
+        }
+    </ElemTableBody>
+</DataTable>
+
+

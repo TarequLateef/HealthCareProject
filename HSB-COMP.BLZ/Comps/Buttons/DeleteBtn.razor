@@ -1,0 +1,41 @@
+﻿
+<button type="button" class="btn hsb-save" @onmouseout=@(()=>mouseOver=false) @onmouseover=@(()=>mouseOver=true)
+        style="@(!mouseOver?"color: #ead3ea;background-color: #6a152c;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"color: #6a152c;background-color: #ead3ea;")" title="حذف" data-bs-target="#Del_@ItemIDProp" 
+        data-bs-toggle="modal" disabled="@(!Deletable)">
+    <span class="fas fa-ban"></span>
+</button>
+<!-- Modal -->
+<div class="modal fade" id="Del_@ItemIDProp" tabindex="-1" aria-labelledby="DelLabel_@ItemIDProp"
+     aria-hidden="true" data-bs-backdrop="static"
+     style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 5px;">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #bea1d1;color: #1a1a1e;">
+                <h1 class="modal-title fs-5" id="@(ItemIDProp+"_Label")">حذف</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-dark ">
+                <p>هل أنت متأكد من  حذف @MessageProp؟</p>
+            </div>
+            <div class="modal-footer " style="background-color:#cad7c0;">
+                <SaveBtn ModalAttr="modalAttr" EvSave="DeleteItem" />
+                <CancelBtn ModalAttr="modalAttr" />
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    bool mouseOver { get; set; } = false;
+    [Parameter] public EventCallback<string> EvDelete { get; set; }
+    [Parameter] public string MessageProp{ get; set; }
+    [Parameter] public string ItemIDProp { get; set; }
+    [Parameter] public bool Deletable { get; set; } = true;
+    Dictionary<string, object> modalAttr { get; set; } = new()
+    {
+            {"data-bs-dismiss","modal"}
+    };
+    void DeleteItem() => EvDelete.InvokeAsync(ItemIDProp);
+}

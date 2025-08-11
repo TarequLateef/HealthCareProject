@@ -1,0 +1,9 @@
+﻿
+<CreateForm ModalFormProp="ModalForm" EvExit="@(()=>EvHideForm.InvokeAsync(true))"
+            EvSave="SavePatSympo" HideModal="blUpdate" >
+    <ElemOperation>
+        <PatSympoOpser BookItem="@PatBookItem" PatSympItem="@_pSympServ.Item"
+                       EvPatSymp="@((item)=>_pSympServ.Item=item)" 
+                       EvPatSympErr="@((err)=>_pSympServ.ErrorList=err)" />
+    </ElemOperation>
+</CreateForm>

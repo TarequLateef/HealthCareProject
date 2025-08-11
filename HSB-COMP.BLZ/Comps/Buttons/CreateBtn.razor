@@ -1,0 +1,63 @@
+﻿
+@if (string.IsNullOrEmpty(CreateLinkProp))
+{
+    if (string.IsNullOrEmpty(ModalID))
+    {
+        <button type="button" class="btn hsb-save" @onmouseout=@(()=>mouseOver=false)
+                @onmouseover=@(()=>mouseOver=true) @onclick="@(()=>EvCreate.InvokeAsync())" title="إضافة"
+                style="@(!mouseOver?"color: #f8efc8;background-color: #6a361d;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"color: #6a361d;background-color: #f8efc8;")">
+            <span class="fas fa-plus-circle"></span>
+        </button>
+
+    }
+    else
+    {
+        <button type="button" class="btn hsb-save" @onmouseout=@(()=>mouseOver=false)
+                @onmouseover=@(()=>mouseOver=true) @onclick="@(()=>EvCreate.InvokeAsync())" title="إضافة"
+                style="@(!mouseOver?"color: #f8efc8;background-color: #6a361d;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"color: #6a361d;background-color: #f8efc8;")"
+                data-bs-toggle="modal" data-bs-target="@("#createItem"+ModalID)">
+            <span class="fas fa-plus-circle"></span>
+        </button>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="@("createItem"+ModalID)" tabindex="-1" aria-labelledby="createItemLabel" aria-hidden="true"
+             data-bs-backdrop="static" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 5px;">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    @* <div class="modal-header">
+            <h1 class="modal-title fs-5" id="createItemLabel">Modal title</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div> *@
+                    <div class="modal-body">
+                        @ElemCreateProp
+                    </div>
+                    @* <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+            </div> *@
+                </div>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <a class="btn hsb-save" @onmouseout=@(()=>mouseOver=false) @onmouseover=@(()=>mouseOver=true)
+       @onclick="@(()=>EvCreate.InvokeAsync(null))" title="إضافة" style="@(!mouseOver?"color: #f8efc8;background-color: #6a361d;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"color: #6a361d;background-color: #f8efc8;")" href="@CreateLinkProp">
+        <span class="fas fa-plus-circle"></span>
+    </a>
+}
+@code {
+    bool mouseOver { get; set; } = false;
+    [Parameter] public RenderFragment ElemCreateProp{ get; set; }
+    [Parameter] public EventCallback EvCreate{ get; set; }
+    [Parameter] public string CreateLinkProp { get; set; } = string.Empty;
+    [Parameter] public bool WithModal { get; set; } = true;
+    [Parameter] public string ModalID { get; set; } = string.Empty;
+    Dictionary<string, object> modaaAttr = new Dictionary<string, object>
+    {{ "data-bs-toggle", "modal" },{"data-bs-target", "#createItem"}};
+}

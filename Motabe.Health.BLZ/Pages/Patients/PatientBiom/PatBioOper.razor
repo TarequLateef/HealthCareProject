@@ -1,0 +1,38 @@
+﻿@using HSB_COMP.BLZ.Comps
+@using global::Health.Motabea.Core.DTOs.Patients
+
+<div class="row">
+    <SelectListComp SelectTitle="Biometrics" WithAddModal="true" WithAddProp="true"
+                    EvAddItem="@(()=>showAdd=true)" EvErrorStatus="@_pBioServ.ReloadErrors"
+                    EvSelectItem="SelectBio" SearchID="@PatBioFields.Bio">
+        <ElemSelectItems>
+            @foreach (var bio in _biooServ.DataList)
+            {
+                <option value="@bio.BioID" selected="@(bio.BioID==PatBioItem.BioID)">
+                    @bio.BioName
+                </option>
+            }
+        </ElemSelectItems>
+        <ElemAddModal>
+            @if (showAdd)
+            {
+                <BioOper EvAfterSave="LoadBioList" />
+            }
+        </ElemAddModal>
+    </SelectListComp>
+
+    <div class="col-md-5">
+        <TextInput TitleProp="Measure" EvGetValue="SelectMeasure" InputValue="@PatBioItem.BioMeasure"
+                   InputID="@PatSysmpFields.Status" />
+    </div>
+    <div class="col-md-4 offset-md-3">
+        <TextInput InputData="@InputType.DateType" InputID="@PatBioFields.Date" TitleProp="Date"
+                   InputValue="@( string.IsNullOrEmpty(BookItem.BookID)?DateTime.Now.ToString("yyyy-MM-dd"):BookItem.StartDate.ToString("yyyy-MM-dd"))"
+                   EvGetValue="SetPatDate" />
+    </div>
+    <div class="col-md-12">
+        <TextInput TitleProp="Note" EvGetValue="SetNots" InputValue="@PatBioItem.Note" />
+    </div>
+</div>
+
+

@@ -1,0 +1,10 @@
+﻿.hsb-paging {
+    background-color: #c7d0ff;
+    color: #181934;
+    border: solid 1px #7fadfd;
+}
+
+.hsb-active {
+    background-color: #181934;
+    color: #c7d0ff;
+}

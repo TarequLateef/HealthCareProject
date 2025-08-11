@@ -1,0 +1,31 @@
+﻿
+<div class="input-group input-group-md mb-3">
+    @if (WithTitleProp)
+    {
+        <span class="input-group-text" style="background-color:#0f482e; color:#e5e5b4;">
+            @if (!WithIconProp)
+            {
+                @TitleProp
+            }
+            else
+            {
+                <span class="fas @IconClassProp" title="@TitleProp"></span>
+            }
+        </span>
+    }
+    <label class="form-control">@InputValue</label>
+    @if (!string.IsNullOrEmpty(InfoLink))
+    {
+        <InfoBtn DetailWinProp="@InfoLink" ItemIDProp="@InfoItemID" />
+    }
+</div>
+
+@code {
+    [Parameter] public string TitleProp { get; set; } = string.Empty;
+    [Parameter] public bool WithIconProp { get; set; } = false;
+    [Parameter] public string IconClassProp { get; set; }
+    [Parameter] public string InputValue { get; set; }
+    [Parameter] public string InfoLink { get; set; }
+    [Parameter] public string InfoItemID { get; set; }
+    [Parameter] public bool WithTitleProp { get; set; } = true;
+}

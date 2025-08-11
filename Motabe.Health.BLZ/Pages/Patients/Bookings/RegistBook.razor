@@ -1,0 +1,76 @@
+﻿@page "/BookTicket"
+@using Motabe.Health.BLZ.Data.Services.Patients
+@using global::Health.Motabea.Core.DTOs.Patients
+@using global::Health.Motabea.Core.Models.Patients
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <CreateForm DisableSave="@(_bServ.ErrorList.Any(b=>!b.Done))" EvSave="BookingP"
+                    ListCount="@registCount" EvExit="@(()=>_bookNav.NavigateTo("/"))" >
+            <ElemOperation>
+                <BookOper EvBookErrList="@((erList)=>_bServ.ErrorList=erList)" 
+                          EvBooking="GetBooking" BookItem="@_bServ.Item" />
+            </ElemOperation>
+            <ElemListModal>
+                <ListModalBtn TableCaption="Booking" RowsCount="@registCount" WithCreateBtn="false"
+                              CurrPage="@_bServ.CurrPage" EvChangePage="@_bServ.ChangePage"
+                              RowsPerPage="@_bServ.FieldsPerPage" WithExit="true">
+                    <ElemTableHead>
+                        <th>@_bServ.ParentListCount</th>
+                        <th>
+                            <SearchDropDwon TitleProp="Patient Name" ListID="@BookFields.Patient"
+                                            EvSearching="_bServ.SearchField"
+                                            FieldNameProp="@BookFields.Patient" />
+                        </th>
+                        <th>
+                            <SearchDropDwon TitleProp="Phone" ListID="@BookFields.Phone"
+                                            EvSearching="_bServ.SearchField"
+                                            FieldNameProp="@BookFields.Phone" />
+                        </th>
+                        <th>Ordering</th>
+                        @* <th>Repeat</th> *@
+                        <th>Examination</th>
+                    </ElemTableHead>
+                    <ElemTableBody>
+                        @foreach (var book in _bServ.DataList)
+                        {
+                            <DataRow>
+                                <ElemRowFields>
+                                    <td>
+                                        <CheckBtn ItemID="@book.BookID" CheckItem="@book.EnsureBook"
+                                                  TitleProp="Confirmed" ReadOnly="@book.EnsureBook"
+                                                  EvGetItemID="Confirmation" />
+                                    </td>
+                                    <td>@book.PatientBaseTBL.PatientName</td>
+                                    <td>@book.PatientBaseTBL.Phone</td>
+                                    <td>@book.Ordering</td>
+                                    @* <td>
+                                        <CheckBtn ItemID="@("rep"+book.BookID)"
+                                                  CheckItem="@book.Repeated" EvGetItemID="RepItem"
+                                                  WithAutoTitle="false"
+                                                  TitleProp="@(book.Repeated ? 
+                                        docAssiss ? BookRep.ArRep : BookRep.EnRep
+                                    : docAssiss ? BookRep.ArClinic : BookRep.EnClinic)" />
+                                    </td> *@
+                                    <td>
+                                        <TextInput WithLimitList="true" InputID="@("stu"+book.BookID)"
+                                                   InputValue="@(docAssiss?BookRep.ArStatus(book.BookStatus): BookRep.EnStatus(book.BookStatus))"
+                                                   EvGetValue="@(async (stu)=>{
+            book.BookStatus=BookRep.ArStatus(stu);
+            int bIndx = _bServ.OperationList.IndexOf(book);
+            _bookMap.Map(book, _bServ.OperationItem);
+            var confBook = await _bServ.UptateItem(_bServ.OperationItem, _bServ.UpdateUrl);
+            if (confBook.IsSuccessStatusCode) _bServ.OperationList[bIndx]=book;})"
+                                                   LimitList="@(docAssiss? new BookRepList().ArList
+                                                        : new BookRepList().EnList)" />
+                                    </td>
+                                </ElemRowFields>
+                            </DataRow>
+                        }
+                    </ElemTableBody>
+                </ListModalBtn>
+            </ElemListModal>
+        </CreateForm>
+    </div>
+</div>
+

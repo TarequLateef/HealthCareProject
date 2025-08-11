@@ -1,0 +1,45 @@
+﻿
+<DataTable CurrPage="@_pBioServ.CurrPage" EvChangePage="@_pBioServ.ChangePage"
+           RowsCount="@_pBioServ.ParentListCount" RowsPerPage="@_pBioServ.FieldsPerPage"
+           WithCreateBtn="true" TableCaption="Patient Biometrics" 
+           WithRecycle="@_pBioServ.MainList.Any(ps=>ps.StartDate.Date<ps.BookingTBL.StartDate.Date)"
+           EvShowIgnored="GetHistory" EvShowCreateModal="@(await=>EvShowAdd.InvokeAsync(true))">
+    <ElemTableHead>
+        <th>@_pBioServ.ParentListCount</th>
+        <th>Biometric</th>
+        <th>Date</th>
+        <th>Measure</th>
+        <th>Normal Measure</th>
+        <th>@_pBioServ.CurrPage</th>
+    </ElemTableHead>
+    <ElemTableBody>
+        @foreach (var ps in _pBioServ.DataList)
+        {
+            <DataRow>
+                <ElemRowFields>
+                    <td>
+                        <UpdateBtn EvUpdate="SelectUpdate" ItemIDProp="@ps.PatBioID">
+                            <ElemUpdateProp>
+                                @if (!string.IsNullOrEmpty(currPatBioID) && ps.PatBioID==currPatBioID)
+                                {
+                                    <PatBioAdd ModalForm="true" PatBookItem="@PatBookItem"
+                                                patBioID="@ps.PatBioID" EvUpdateItem="ReplaceItem" />
+                                }
+                            </ElemUpdateProp>
+                        </UpdateBtn>
+                    </td>
+                    <td>@ps.BiometricTBL.BioName</td>
+                    <td>@ps.StartDate.ToString("yyyy-MM-dd")</td>
+                    <td>@ps.BioMeasure</td>
+                    <td>@ps.BiometricTBL.NormalMeasure</td>
+                    <td>
+                        <DeleteBtn ItemIDProp="@ps.PatBioID" EvDelete="DeleteBio"
+                                   MessageProp="@(ps.BiometricTBL.BioName)" />
+                    </td>
+                </ElemRowFields>
+            </DataRow>
+        }
+    </ElemTableBody>
+</DataTable>
+
+

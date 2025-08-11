@@ -1,0 +1,68 @@
+﻿@using HSB_COMP.BLZ.Comps
+@using Motabe.Health.BLZ.Data.Services.Patients
+@using global::Health.Motabea.Core.DTOs.Patients
+
+@page "/BookList"
+
+
+<div class="row">
+    <div class="col-md-3">
+        <TextInput InputValue="@chkDate.ToString("yyyy-MM-dd")" TitleProp="Check Date"
+                   InputID="@BookFields.Date" EvGetValue="ChangeDate" InputData="@InputType.DateType" />
+    </div>
+</div>
+<DataTable TableCaption="Medical check list" RowsCount="@_bServ.ParentListCount" WithCreateBtn="false"
+           CurrPage="@_bServ.CurrPage" EvChangePage="@_bServ.ChangePage"
+           RowsPerPage="_bServ.FieldsPerPage">
+    <ElemTableHead>
+        <th>@_bServ.ParentListCount</th>
+        <th>
+            <SearchDropDwon TitleProp="Patient Name" ListID="@BookFields.Patient"
+                            EvSearching="_bServ.SearchField" FieldNameProp="@BookFields.Patient" />
+        </th>
+        <th>
+            <SearchDropDwon TitleProp="Patient Code" ListID="@BookFields.Code"
+                            EvSearching="_bServ.SearchField" FieldNameProp="@BookFields.Code" />
+        </th>
+        <th>
+            <SearchDropDwon TitleProp="Phone" ListID="@BookFields.Phone"
+                            EvSearching="_bServ.SearchField" FieldNameProp="@BookFields.Phone" />
+        </th>
+        <th>Ordering</th>
+        <th>
+            <SearchDropDwon TitleProp="Examination" ListID="@BookFields.Status"
+            EvSearching="_bServ.SearchField" FieldNameProp="@BookFields.Status"/>
+        </th>
+        <th>@_bServ.CurrPage</th>
+    </ElemTableHead>
+    <ElemTableBody>
+        @foreach (var book in _bServ.DataList)
+        {
+            <DataRow EvClick="@(()=>bNav.NavigateTo(_pBaseServ.DetailsWin+PatBaseFields.ParamPID+book.PatientID+PatBaseFields.ParamBookDate+book.StartDate.ToString("yyyyMMdd")))">
+                <ElemRowFields>
+                    <td>
+                        <InfoBtn TitleProp="Book" AvailableItem="@book.Available" 
+                                 DetailWinProp="@(_pBaseServ.DetailsWin+PatBaseFields.ParamPID+book.PatientID+PatBaseFields.ParamBookDate+book.StartDate.ToString("yyyyMMdd"))"/>
+                            @* <ElemInfProp>
+                                @if (infoID==book.PatientID)
+                                {
+                                    <PatientBaseDet BookItem="book" pbID="@book.PatientID"
+                                                    WithModal="true" />
+                                }
+                            </ElemInfProp>
+                        </InfoBtn> *@
+                    </td>
+                    <td>@book.PatientBaseTBL.PatientName</td>
+                    <td>@book.PatientBaseTBL.PatientCode</td>
+                    <td>@book.PatientBaseTBL.Phone</td>
+                    <td>@book.Ordering</td>
+                    <td>
+                        @(docAssiss ? BookRep.ArStatus(book.BookStatus) : BookRep.EnStatus(book.BookStatus))
+                    </td>
+                    <td></td>
+                </ElemRowFields>
+            </DataRow>
+        }
+    </ElemTableBody>
+</DataTable>
+

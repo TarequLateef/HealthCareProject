@@ -1,0 +1,25 @@
+﻿<div class="input-group input-group-md mb-3">
+    @if (ShowTitle)
+    {
+        <span class="input-group-text" style="background-color:#0f482e; color:#e5e5b4;">
+            @if (!WithIconProp)
+            {
+                @TitleProp
+            }
+            else
+            {
+                <span class="fas @IconClassProp" title="@TitleProp"></span>
+            }
+        </span>
+    }
+    <label style="@("font-size:"+FontSize)" class="form-control hsb-barcode">@InputValue</label>
+</div>
+
+@code {
+    [Parameter] public string TitleProp { get; set; } = string.Empty;
+    [Parameter] public bool WithIconProp { get; set; } = false;
+    [Parameter] public string IconClassProp { get; set; }
+    [Parameter] public string InputValue { get; set; }
+    [Parameter] public bool ShowTitle { get; set; } = true;
+    [Parameter] public string FontSize { get; set; } = "20px";
+}

@@ -1,0 +1,40 @@
+﻿
+<div class="input-group input-group-md mb-3">
+    <span class="input-group-text" style="background-color:#0f482e; color:#e5e5b4;">
+        @if (!WithIconProp)
+        {
+            @TitleProp
+        }
+        else
+        {
+            <span class="fas @IconClassProp" title="@TitleProp"></span>
+        }
+    </span>
+    @if (!string.IsNullOrEmpty(InputValue))
+    {
+        <label class="form-control">@InputValue</label>
+    }
+    @if (!string.IsNullOrEmpty(UpdateItemID))
+    {
+        <UpdateBtn ItemIDProp="@UpdateItemID" UpdateLinkProp="@UpdateLinkProp" UpdateSize="@UpdateSize"
+                   DisableSaving="DisableUpdate" EvUpdate="Update">
+            <ElemUpdateProp>
+                @ElemUpdate
+            </ElemUpdateProp>
+        </UpdateBtn>
+    }
+</div>
+
+@code{
+    [Parameter] public string TitleProp { get; set; } = string.Empty;
+    [Parameter] public bool WithIconProp { get; set; } = false;
+    [Parameter] public string IconClassProp { get; set; }
+    [Parameter] public string InputValue { get; set; }
+    [Parameter] public string UpdateItemID { get; set; }
+    [Parameter] public string UpdateLinkProp { get; set; } = string.Empty;
+    [Parameter] public string UpdateSize { get; set; } = string.Empty;
+    [Parameter] public bool DisableUpdate { get; set; } = false;
+    [Parameter] public RenderFragment ElemUpdate { get; set; }
+    [Parameter] public EventCallback<string> EvUpdate { get; set; }
+    void Update() => EvUpdate.InvokeAsync(UpdateItemID);
+}

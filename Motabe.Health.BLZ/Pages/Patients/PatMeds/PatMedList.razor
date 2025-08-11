@@ -1,0 +1,58 @@
+﻿@using global::Health.Motabea.Core.Models.Patients
+
+
+<DataTable CurrPage="@_pMedServ.CurrPage" EvChangePage="@_pMedServ.ChangePage" CreateModalID="patMed"
+           RowsCount="@_pMedServ.ParentListCount" RowsPerPage="@_pMedServ.FieldsPerPage"
+           TableCaption="Patient Medicine" EvShowIgnored="GetHistory" 
+           WithRecycle="@_pMedServ.MainList.Any(ps=>ps.StartDate.Date<ps.BookingTBL.StartDate.Date)"
+           EvShowCreateModal="@(await=>EvShowAdd.InvokeAsync(true))"
+           WithPrinting="@_pMedServ.DataList.Any()">
+    <ElemCreateProp>
+        <PatMedOperList BookingItem="PatBookItem" />
+    </ElemCreateProp>
+    <ElemTableHead>
+        @* <th>Count Of Visit</th>
+        <th>Date</th>
+        <th>Count of Medicins</th> *@
+        <th>@_pMedServ.ParentListCount</th>
+        <th>Medicine</th>
+        <th>Dose</th>
+        <th>Period</th>
+        <th>Date</th>
+        <th>Note</th>
+        <th>@_pMedServ.CurrPage</th>
+    </ElemTableHead>
+    <ElemTableBody>
+        @foreach (var ps in _pMedServ.DataList)
+        {
+            <DataRow>
+                <ElemRowFields>
+                    @* <td>Visit_@(pmDateGr.IndexOf(ps)+1)</td>
+                    <td>@ps.MedDate.Date.ToString("yyyy-MM-dd")</td>
+                    <td>@ps.CountOfMed</td> *@
+                    <td>
+                        <UpdateBtn EvUpdate="SelectUpdate" ItemIDProp="@ps.PatMedID">
+                            <ElemUpdateProp>
+                                @if (!string.IsNullOrEmpty(currPatTreatID) && ps.PatMedID==currPatTreatID)
+                                {
+                                    <AddPatMed ModalForm="true" PatBookItem="@PatBookItem"
+                                               patTreatID="@ps.PatMedID" EvUpdateItem="ReplaceItem" />
+                                }
+                            </ElemUpdateProp>
+                        </UpdateBtn>
+                    </td>
+                    <td>@ps.MedicineTBL.MedName</td>
+                    <td>@ps.Dose</td>
+                    <td>@ps.Period</td>
+                    <td>@ps.StartDate.ToString("yyyy-MM-dd")</td>
+                    <td>@ps.Note</td>
+                    <td>
+                        <DeleteBtn ItemIDProp="@ps.PatMedID" EvDelete="DeleteBio"
+                                   MessageProp="@(ps.MedicineTBL.MedName)" />
+                    </td>
+                </ElemRowFields>
+            </DataRow>
+        }
+    </ElemTableBody>
+</DataTable>
+

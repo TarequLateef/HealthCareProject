@@ -1,0 +1,17 @@
+﻿@using global::Health.Motabea.Core.DTOs.Services
+
+
+
+<CreateForm ModalFormProp="true" DisableSave="@_bioServ.ErrorList.Any(b=>!b.Done)"
+            EvSave="SaveBio">
+    <ElemOperation>
+        <TextInput TitleProp="Biometric" InputValue="@_bioServ.Item.BioName" PlaceHolder="New Biometric"
+                   EvErrorStatus="@_bioServ.ReloadErrors" InputID="@BioFields.Name"
+                   EvGetValue="@((name)=>_bioServ.Item.BioName=name)" />
+        <TextInput TitleProp="Normal Measure" InputValue="@_bioServ.Item.NormalMeasure"
+                   EvErrorStatus="@_bioServ.ReloadErrors" InputID="@BioFields.Measure"
+                   EvGetValue="@((meas)=>_bioServ.Item.NormalMeasure=meas)" 
+                   PlaceHolder="Measure" />
+    </ElemOperation>
+</CreateForm>
+

@@ -1,0 +1,10 @@
+﻿
+<CreateForm ModalFormProp="ModalForm" HideModal="false" EvSave="SavePatAnal"
+            DisableSave="@_pAnalServ.ErrorList.Any(pB=>!pB.Done)"
+            EvExit="@(()=>EvHideForm.InvokeAsync(true))">
+    <ElemOperation>
+        <PatAnalOper BookItem="@PatBookItem" PatAnalItem="_pAnalServ.Item"
+                     EvPatAnal="@((item)=>_pAnalServ.Item=item)"
+                     EvPatAnalErr="@((err)=>_pAnalServ.ErrorList=err)" />
+    </ElemOperation>
+</CreateForm>

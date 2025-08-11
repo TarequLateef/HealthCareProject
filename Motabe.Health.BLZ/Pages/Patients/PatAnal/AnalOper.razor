@@ -1,0 +1,15 @@
+﻿@using global::Health.Motabea.Core.DTOs.Services
+
+<CreateForm ModalFormProp="true" DisableSave="@_analServ.ErrorList.Any(b=>!b.Done)"
+            EvSave="Saveanal">
+    <ElemOperation>
+        <TextInput TitleProp="Analysis" InputValue="@_analServ.Item.AnalysisName"
+                   PlaceHolder="New Analysis"
+                   EvErrorStatus="@_analServ.ReloadErrors" InputID="@AnalFields.Name"
+                   EvGetValue="@((name)=>_analServ.Item.AnalysisName=name)" />
+        <TextInput TitleProp="Normal Measure" InputValue="@_analServ.Item.NormalMeasure"
+                   EvErrorStatus="@_analServ.ReloadErrors" InputID="@AnalFields.Measure"
+                   EvGetValue="@((meas)=>_analServ.Item.NormalMeasure=meas)"
+                   PlaceHolder="Measure" />
+    </ElemOperation>
+</CreateForm>

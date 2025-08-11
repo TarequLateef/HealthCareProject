@@ -1,0 +1,43 @@
+﻿
+<DataTable CurrPage="@_pSympServ.CurrPage" EvChangePage="@_pSympServ.ChangePage"
+           RowsCount="@_pSympServ.ParentListCount" RowsPerPage="@_pSympServ.FieldsPerPage"
+           WithCreateBtn="true" TableCaption="Patient Symptoms" EvShowIgnored="GetHistory"
+           WithRecycle="@_pSympServ.MainList.Any(ps=>ps.StartDate.Date<ps.BookingTBL.StartDate.Date)"
+           EvShowCreateModal="@(await=>EvShowAdd.InvokeAsync(true))">
+    <ElemTableHead>
+        <th>@_pSympServ.ParentListCount</th>
+        <th>Symptoms</th>
+        <th>Date</th>
+        <th>Note</th>
+        <th>@_pSympServ.CurrPage</th>
+    </ElemTableHead>
+    
+    <ElemTableBody>
+        @foreach (var ps in _pSympServ.DataList)
+        {
+            <DataRow>
+                <ElemRowFields>
+                    <td>
+                        <UpdateBtn EvUpdate="SelectUpdate" ItemIDProp="@ps.PatSympID" >
+                            <ElemUpdateProp>
+                                @if(!string.IsNullOrEmpty(currPatSypID) && ps.PatSympID==currPatSypID)
+                                {
+                                    <PatSympAdd ModalForm="true" PatBookItem="@PatBookItem"
+                                                patSymID="@ps.PatSympID" EvUpdateItem="ReplaceItem"/>
+                                }
+                            </ElemUpdateProp>
+                        </UpdateBtn>
+                    </td>
+                    <td>@ps.SymptomsTBL.SymptonName</td>
+                    <td>@ps.StartDate.ToString("yyyy-MM-dd")</td>
+                    <td>@ps.Description</td>
+                    <td>
+                        <DeleteBtn ItemIDProp="@ps.PatSympID" EvDelete="DeleteSyp"
+                                   MessageProp="@(ps.SymptomsTBL.SymptonName)" />
+                    </td>
+                </ElemRowFields>
+            </DataRow>
+        }
+    </ElemTableBody>
+
+</DataTable>

@@ -1,0 +1,30 @@
+﻿@using HSB_COMP.BLZ.Comps
+@using global::Health.Motabea.Core.DTOs.Patients
+@using global::Health.Motabea.Core.Models.Patients
+
+<div class="row">
+    <SelectListComp WithAddProp="true" SelectTitle="Symptoms" EvErrorStatus="@_pSympServ.ReloadErrors"
+                    EvSelectItem="SelectSympo" EvAddItem="AddSypo" SearchID="@PatSysmpFields.Sympo">
+        <ElemSelectItems>
+            @foreach (var symp in _sympoServ.DataList)
+            {
+                <option value="@symp.SymptomID" selected="@(symp.SymptomID==PatSympItem.SympID)">
+                    @symp.SymptonName
+                </option>
+            }
+        </ElemSelectItems>
+    </SelectListComp>
+    <div class="col-md-5">
+        <TextInput WithLimitList="true" LimitList="@(new SympLevel().FirstSymp)" TitleProp="Status"
+                   EvGetValue="SelectLevel" InputValue="@PatSympItem.SympStatus"
+                   InputID="@PatSysmpFields.Status" />
+    </div>
+    <div class="col-md-4 offset-md-3">
+        <TextInput InputData="@InputType.DateType" InputID="@PatSysmpFields.Date" TitleProp="Date"
+                   InputValue="@( string.IsNullOrEmpty(BookItem.BookID)?DateTime.Now.ToString("yyyy-MM-dd"):BookItem.StartDate.ToString("yyyy-MM-dd"))" 
+                   EvGetValue="SetPatDate"/>
+    </div>
+    <div class="col-md-12">
+        <TextInput TitleProp="Note" EvGetValue="SetNots" InputValue="@PatSympItem.Description"/>
+    </div>
+</div>

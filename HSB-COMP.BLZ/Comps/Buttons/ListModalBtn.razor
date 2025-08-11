@@ -1,0 +1,99 @@
+﻿@using HSB_COMP.BLZ.Comps.Table
+
+<button type="button" class="btn hsb-info" title="@TitleProp" data-bs-toggle="modal"
+        data-bs-target="#showTable" 
+        style="@(!mouseOver?"color: #e9d75c;background-color: #5e5720;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"color: #5e5720;background-color: #e9d75c;")" @onmouseover=@(()=>mouseOver=true)
+        @onmouseout=@(()=>mouseOver=false)>
+    <span class="fas fa-stream position-relative">
+        @if (RowsCount!=0)
+        {
+            <span class="position-absolute top-0 start-0 translate-middle badge bg-success border border-light rounded-circle">
+                @RowsCount
+                <span class="visually-hidden">unread messages</span>
+            </span>
+        }
+    </span>
+</button>
+<span>@TitleProp</span>
+
+<!-- Modal -->
+<div class="modal fade" id="showTable" tabindex="-1" aria-labelledby="showTableLabel" aria-hidden="true"
+     data-bs-backdrop="static" style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 5px; ">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-body" style="background-color:#d9f1ef;">
+                <div class="row justify-content-center">
+                    <div class="row mb-3">
+                        <div class="col-md-1 offset-md-10">
+                            @if (WithCreateBtn)
+                            {
+                                if (!string.IsNullOrEmpty(CreateWinLink))
+                                {
+                                    <CreateBtn CreateLinkProp="@CreateWinLink" />
+                                }
+                                else
+                                {
+                                    <CreateBtn EvCreate="CreateItem">
+                                        <ElemCreateProp>
+                                            @if (operateCreate)
+                                            {
+                                                @ElemCreateProp
+                                            }
+                                        </ElemCreateProp>
+                                    </CreateBtn>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <table class="table caption-top">
+                        <caption class="hsb-table-caption text-center">@TableCaption</caption>
+                        <thead class="hsb-table-head">
+                            <tr>
+                                @ElemTableHead
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+                            @ElemTableBody
+                        </tbody>
+                    </table>
+
+                    <div class="row justify-content-center">
+                        <div class="col-md-1 offset-md-1">
+                            @* For printing *@
+                            @if (WithPrinting)
+                            {
+                                <PrintBtn />
+                            }
+                        </div>
+                        <div class="col-md-4 @(WithRecycle?"offset-md-1":"offset-md-2")">
+                            @if (withNavigation)
+                            {
+                                <TablePaging RowsCount="@RowsCount" RowsPerPage="@RowsPerPage" CurrPage="@CurrPage"
+                                             EvChangePage="ChangePage" />
+                            }
+                        </div>
+                        <div class="col-md-1">
+                            @* For Recycleben *@
+                            @if (WithRecycle)
+                            {
+                                <DataBucket EvShowSopped="@((stop)=>EvShowIgnored.InvokeAsync(!stop))" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                @if (WithExit)
+                {
+                    <div class="modal-footer">
+                        <div class="col-md-1">
+                            <CancelBtn ModalAttr="@(modalAttr)" EvCancel="@(()=>EvExit.InvokeAsync())" />
+                        </div>
+                    </div>
+                }
+              
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,12 @@
+﻿.hsb-tab-nav {
+    background-color: #d984a7;
+}
+
+.hsb-tab-elem {
+    color: #fffad4;
+}
+
+.hsb-active-elem {
+    background-color: #6a152c;
+    color: #ead3ea;
+}

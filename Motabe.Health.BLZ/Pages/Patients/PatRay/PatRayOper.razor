@@ -1,0 +1,43 @@
+﻿@using HSB_COMP.BLZ.Comps
+@using global::Health.Motabea.Core.DTOs.Patients
+
+<div class="row">
+    <SelectListComp SelectTitle="x-Ray" WithAddModal="true" WithAddProp="true"
+                    EvAddItem="@(()=>showAdd=true)" EvErrorStatus="@_pRayServ.ReloadErrors"
+                    EvSelectItem="SelectRay" SearchID="@PatRayFields.Name">
+        <ElemSelectItems>
+            @foreach (var bio in _rayServ.DataList)
+            {
+                <option value="@bio.RayID" selected="@(bio.RayID==PatRayItem.RayID)">
+                    @bio.RayName
+                </option>
+            }
+        </ElemSelectItems>
+        <ElemAddModal>
+            @if (showAdd)
+            {
+                <RayOper EvAfterSave="LoadRayList" />
+            }
+        </ElemAddModal>
+    </SelectListComp>
+
+    <div class="col-md-5">
+        <TextInput TitleProp="Lab Name" EvGetValue="SetPatLab" InputValue="@PatRayItem.X_Lab"
+                   InputID="@PatRayFields.Lab" />
+    </div>
+    <div class="col-md-4 offset-md-3">
+        <TextInput InputData="@InputType.DateType" InputID="@PatRayFields.Date" TitleProp="Date"
+                   InputValue="@( string.IsNullOrEmpty(BookItem.BookID)?DateTime.Now.ToString("yyyy-MM-dd"):BookItem.StartDate.ToString("yyyy-MM-dd"))"
+                   EvGetValue="SetPatDate" />
+    </div>
+    <div class="col-md-12">
+        <TextInput TitleProp="Description" EvGetValue="SelectDesc" InputValue="@PatRayItem.Descirption"
+                   InputID="@PatRayFields.Desc" />
+    </div>
+    <div class="col-md-12">
+        <TextInput TitleProp="X-Ray Note" EvGetValue="SelectNote" InputValue="@PatRayItem.RayNote"
+                   InputID="@PatRayFields.Note" />
+    </div>
+
+</div>
+

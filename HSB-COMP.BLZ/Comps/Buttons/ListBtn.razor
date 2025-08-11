@@ -1,0 +1,76 @@
+﻿@using HSB_COMP.BLZ.Comps.Table
+@using static HSB_COMP.BLZ.Comps.SelectComp.SelectListComp
+
+@if (!WithSearchProp)
+{
+    <a class="btn hsb-info" title="@TitleProp" href="@ListLinkProp"
+       style="@(!mouseOver?"color: #e9d75c;background-color: #5e5720;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"color: #5e5720;background-color: #e9d75c;")" @onmouseover=@(()=>mouseOver=true)
+       @onmouseout=@(()=>mouseOver=false)>
+        <span class="fas fa-stream">
+            @* @if (ItemsCount!=0)
+            {
+                <span class="position-absolute top-0 start-0 translate-middle badge bg-success border border-light rounded-circle">
+                    @ItemsCount
+                    <span class="visually-hidden">unread messages</span>
+                </span>
+            } *@
+
+        </span>
+    </a>
+}
+else
+{
+    <div class="btn-group">
+        @* <button type="button" class="btn btn-danger">Action</button> *@
+        <a role="button" class="btn hsb-info" title="@TitleProp" href="@ListLinkProp"
+           style="@(!mouseOver?"color: #e9d75c;background-color: #5e5720;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"color: #5e5720;background-color: #e9d75c;")" @onmouseover=@(()=>mouseOver=true)
+           @onmouseout=@(()=>mouseOver=false)>
+            <span class="fas fa-stream"></span>
+        </a>
+
+        <button type="button" class="btn hsb-info dropdown-toggle-split" data-bs-toggle="dropdown"
+                aria-expanded="false" @onmouseover=@(()=>mouseOver=true) @onmouseout=@(()=>mouseOver=false)
+                style="@(!mouseOver?"color: #5e5720;background-color: #e9d75c;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"color: #e9d75c;background-color: #5e5720;")">
+            <span class="visually-hidden">Toggle Dropdown</span>
+            <span class="fas fa-search"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li>
+                <div class="row justify-content-center">
+                    <input class="col-md-10" type="text" placeholder=" بحث @TitleProp " @onchange="SearchValue" />
+                </div>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <div class="form-check" >
+                    <input class="form-check-input" type="radio" name="chkContains" id="chkContains"
+                           checked="@(checkAcion=="Contains")">
+                    <label class="form-check-label" for="chkContains">
+                        يحوي
+                    </label>
+                </div>
+            </li>
+        </ul>
+    </div>
+}
+
+@code {
+    [Parameter] public string TitleProp { get; set; }
+    [Parameter] public string ListLinkProp{ get; set; }
+    [Parameter] public bool WithSearchProp { get; set; } = false;
+    [Parameter] public EventCallback<SearchTable> EvSearching { get; set; }
+    bool mouseOver { get; set; } = false;
+    private SearchTable Search = new SearchTable();
+    private bool filterd = false;
+    private string checkAcion = string.Empty;
+    private void SearchValue(ChangeEventArgs e)
+    {
+        Search.SearchValue = Convert.ToString(e.Value);
+        if (!filterd) filterd=true;
+        EvSearching.InvokeAsync(Search);
+    }
+
+}

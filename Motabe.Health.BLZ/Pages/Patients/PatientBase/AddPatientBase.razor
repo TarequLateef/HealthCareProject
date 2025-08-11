@@ -1,0 +1,18 @@
+﻿@page "/NewPatBase"
+
+<div class="row justify-content-center">
+    <div class="@(ShowAsModal?"":"col-md-8")">
+        <CreateForm ModalFormProp="ShowAsModal" ListLinkProp="@_pBaseServ.ListWin" ExitLink="@ExitLink"
+                    DisableSave="@(_pBaseServ.ErrorList.Any(p=>!p.Done) && string.IsNullOrEmpty(_pBaseServ.Item.PatientID))"
+                    EvSave="SavePatient" EvExit="ExitCreate">
+            <ElemOperation>
+                <PatienBaseOper PatBaseItem="@_pBaseServ.Item"
+                                EvPatErrList="@((pErr)=>_pBaseServ.ErrorList=pErr)"
+                                EvPatItem="@((pItem)=>_pBaseServ.Item=pItem)"
+                                EvCityCode="@((code)=>cityCode=code)"
+                                EvGovernCode="@((code)=>governCode=code)" />
+            </ElemOperation>
+        </CreateForm>
+    </div>
+</div>
+

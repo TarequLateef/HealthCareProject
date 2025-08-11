@@ -1,0 +1,10 @@
+﻿
+<CreateForm ModalFormProp="ModalForm" HideModal="true" EvSave="SavePatRay"
+            DisableSave="@_pRayServ.ErrorList.Any(pB=>!pB.Done)"
+            EvExit="@(await => EvHideForm.InvokeAsync(true))">
+    <ElemOperation>
+        <PatRayOper BookItem="@PatBookItem" PatRayItem="_pRayServ.Item"
+                    EvPatRay="@((item)=>_pRayServ.Item=item)"
+                    EvPatRayErr="@((err)=>_pRayServ.ErrorList=err)" />
+    </ElemOperation>
+</CreateForm>

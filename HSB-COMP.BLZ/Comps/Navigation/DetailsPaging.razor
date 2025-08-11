@@ -1,0 +1,67 @@
+﻿@using HSB_COMP.BLZ.Comps.Table
+
+<nav aria-label="Page navigation example ">
+    <ul class="pagination justify-content-center">
+        @* first *@
+        <li class="page-item @(CurrIndex==1?"disabled":"")">
+            <button class="page-link hsb-paging"
+                    @onclick="@(()=>{indx = 1;
+                                EvChangeItem.InvokeAsync(indx);})">
+                <span class="fas fa-angle-double-right"></span>
+            </button>
+        </li>
+        @* previous *@
+        <li class="page-item @(CurrIndex==1?"disabled":"")">
+            <button class="page-link hsb-paging"
+                    @onclick="@(()=>{indx = CurrIndex-1;
+                                EvChangeItem.InvokeAsync(indx);})">
+                <span class="fas fa-angle-right"></span>
+            </button>
+        </li>
+        @* currIndx *@
+        <li class="page-item">
+            <a role="button" class="page-link hsb-active">
+                 @(CurrIndex +"/"+ ListCount)
+            </a>
+        </li>
+        @* Search *@
+        @* <li class="input-group input-group-md ">
+            <span role="button" class="input-group-text" style="background-color:#0f482e; color:#e5e5b4;"
+                  @onclick="@(()=>EvSearchItem.InvokeAsync(
+                    new SearchTable{SearchValue=searchVal,
+                                    FieldName=SearchFieldName}))">
+                <span class="fas fa-search" title="بحث"></span>
+            </span>
+            <input type="text" class="form-control" aria-label="Sizing input" placeholder="@SearchTitle"
+                   @bind-value="@searchVal" />
+        </li> *@
+        @* next *@
+        <li class="page-item @(CurrIndex==ListCount?"disabled":"")">
+            <button class="page-link hsb-paging"
+                    @onclick="@(()=>{indx = CurrIndex+1;
+                                EvChangeItem.InvokeAsync(indx);})">
+                <span class="fas fa-angle-left"></span>
+            </button>
+        </li>
+        @* last *@
+        <li class="page-item @(CurrIndex==ListCount?"disabled":"")">
+            <button class="page-link hsb-paging"
+                    @onclick="@(()=>{indx = ListCount;
+                                EvChangeItem.InvokeAsync(indx);})">
+                <span class="fas fa-angle-double-left"></span>
+            </button>
+        </li>
+    </ul>
+</nav>
+
+@code {
+    [Parameter] public int ListCount { get; set; } = 1;
+    int indx = 0;
+    [Parameter] public int CurrIndex { get; set; } = 1;
+    [Parameter] public string SearchTitle { get; set; } = string.Empty;
+    [Parameter] public EventCallback<int> EvChangeItem { get; set; }
+    //[Parameter] public EventCallback<SearchTable> EvSearchItem { get; set; }
+    //[Parameter] public string? SearchFieldName { get; set; }
+    //string searchVal { get; set; } = string.Empty;
+    // int PagesCount => RowsCount%RowsPerPage>0 ? ((int)RowsCount/RowsPerPage)+1 : (int)RowsCount/RowsPerPage;
+}

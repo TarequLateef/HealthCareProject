@@ -1,0 +1,49 @@
+﻿
+<button type="button" class="btn hsb-save" @onmouseout=@(()=>mouseOver=false) @onmouseover=@(()=>mouseOver=true)
+        style="@(!mouseOver?WithAvalProp?
+        "color: #c7d0ff;background-color: #181934;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;":"color: #181934;background-color: #c7d0ff;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :WithAvalProp?"color: #181934;background-color: #c7d0ff;":"color: #c7d0ff;background-color: #181934;")"
+        data-bs-target="#Stop_@ItemIDProp" data-bs-toggle="modal" title="@(WithAvalProp?"ايقاف":"استعادة")">
+    @if (WithAvalProp)
+    {
+        <span class="fas fa-trash-alt"></span>
+    }
+    else
+    {
+        <span class="fas fa-play"></span>
+    }
+</button>
+<!-- Modal -->
+<div class="modal fade" id="Stop_@ItemIDProp" tabindex="-1" aria-labelledby="StopLabel_@ItemIDProp"
+     aria-hidden="true" data-bs-backdrop="static"
+     style="box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 5px;">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #bea1d1;color: #1a1a1e;">
+                <h1 class="modal-title fs-5" id="@(ItemIDProp+"_Label")">@(WithAvalProp?"ايقاف":"تشغيل")</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="color:#181934;">
+                <p>هل أنت متأكد من  @(WithAvalProp ? "ايقاف" : "تشغيل") @MessageProp؟</p>
+            </div>
+            <div class="modal-footer " style="background-color:#cad7c0;">
+                    <SaveBtn ModalAttr="modalAttr" EvSave="StopRest"/>
+                    <CancelBtn ModalAttr="modalAttr"/>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+    bool mouseOver { get; set; } = false;
+    [Parameter] public EventCallback<string> EvRestore { get; set; }
+    [Parameter] public bool WithAvalProp { get; set; } = true;
+    [Parameter] public string ItemIDProp { get; set; } = string.Empty;
+    [Parameter] public string MessageProp { get; set; }
+    Dictionary<string, object> modalAttr { get; set; } = new()
+    {
+            {"data-bs-dismiss","modal"}
+    };
+    void StopRest() => EvRestore.InvokeAsync(ItemIDProp);
+}

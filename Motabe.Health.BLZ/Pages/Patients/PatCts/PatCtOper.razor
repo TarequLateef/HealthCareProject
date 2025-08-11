@@ -1,0 +1,25 @@
+﻿@using HSB_COMP.BLZ.Comps
+@using global::Health.Motabea.Core.DTOs.Patients
+@using global::Health.Motabea.Core.Models.Patients
+
+<div class="row">
+    <SelectListComp WithAddProp="true" SelectTitle="Ct" EvErrorStatus="@_pCtServ.ReloadErrors"
+                    EvSelectItem="SelectCt" EvAddItem="AddCt" SearchID="@PatSysmpFields.Sympo">
+        <ElemSelectItems>
+            @foreach (var symp in _ctServ.DataList)
+            {
+                <option value="@symp.CT_ID" selected="@(symp.CT_ID==PatCtItem.CTID)">
+                    @symp.CT_Name
+                </option>
+            }
+        </ElemSelectItems>
+    </SelectListComp>
+    <div class="col-md-4">
+        <TextInput InputData="@InputType.DateType" InputID="@PatSysmpFields.Date" TitleProp="Date"
+                   InputValue="@( string.IsNullOrEmpty(BookItem.BookID)?DateTime.Now.ToString("yyyy-MM-dd"):BookItem.StartDate.ToString("yyyy-MM-dd"))"
+                   EvGetValue="SetPatDate" />
+    </div>
+    <div class="col-md-12">
+        <TextInput TitleProp="Note" EvGetValue="SelectCtResult" InputValue="@PatCtItem.CtResult" />
+    </div>
+</div>

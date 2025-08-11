@@ -1,0 +1,15 @@
+﻿@using global::Health.Motabea.Core.DTOs.Services
+
+<CreateForm ModalFormProp="true" DisableSave="@_rayServ.ErrorList.Any(b=>!b.Done)"
+            EvSave="Saveanal">
+    <ElemOperation>
+        <TextInput TitleProp="X-Ray" InputValue="@_rayServ.Item.RayName"
+                   PlaceHolder="New X-Ray"
+                   EvErrorStatus="@_rayServ.ReloadErrors" InputID="@RayFields.Name"
+                   EvGetValue="@((name)=>_rayServ.Item.RayName=name)" />
+        <TextInput TitleProp="X-Ray Description" InputValue="@_rayServ.Item.Descirption"
+                   EvErrorStatus="@_rayServ.ReloadErrors" InputID="@RayFields.Desc"
+                   EvGetValue="@((meas)=>_rayServ.Item.Descirption=meas)"
+                   PlaceHolder="Description" />
+    </ElemOperation>
+</CreateForm>

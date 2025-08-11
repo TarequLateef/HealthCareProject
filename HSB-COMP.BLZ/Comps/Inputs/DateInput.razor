@@ -1,0 +1,86 @@
+﻿@using GeneralMotabea.Core.General
+@using UserManagement.Core.General
+
+<div class="input-group input-group-md mb-3">
+    <span class="input-group-text" style="background-color:#0f482e; color:#e5e5b4;">
+        @if (!WithIconProp)
+        {
+            <strong>@TitleProp</strong>
+        }
+        else
+        {
+            <span class="fas @IconClassProp" title="@TitleProp"></span>
+        }
+    </span>
+    <input type="@InputType.DateType" max="@(string.IsNullOrEmpty(MaxDate)?string.Empty:MaxDate)"
+           min="@(string.IsNullOrEmpty(MinDate)?string.Empty:MinDate)" @bind="txtData"
+           class="form-control" aria-label="Sizing example input">
+    @if (ErrorStatus.Done)
+    {
+        <span class="input-group-text" style="background-color:#c9ddd4; color:#21991f;">
+            <span class="fas fa-check-circle"></span>
+        </span>
+    }
+    <div class="valid-feedback" style="display:inline-block">@ErrorStatus.ErrorMessage</div>
+</div>
+
+@code {
+    [Parameter] public string InputID { get; set; } = string.Empty;
+    [Parameter] public string TitleProp { get; set; } = string.Empty;
+    [Parameter] public string InputData { get; set; } = InputType.TextType;
+    [Parameter] public EventCallback<string> EvGetValue { get; set; }
+    [Parameter] public EventCallback<ErrorStatus> EvErrorStatus { get; set; }
+    [Parameter] public bool WithIconProp { get; set; } = false;
+    [Parameter] public bool IsRequired { get; set; } = true;
+    [Parameter] public string IconClassProp { get; set; }
+    [Parameter] public string InputValue { get; set; }
+    [Parameter] public string MaxDate { get; set; } = string.Empty;
+    [Parameter] public string MinDate { get; set; } = string.Empty;
+    /// <summary>
+    /// the difrence with be like that "yyMMdd"
+    /// </summary>
+    [Parameter] public string DifrenceDate { get; set; } = string.Empty;
+    [Parameter] public ErrorStatus ErrorStatus { get; set; }
+    string txtData
+    {
+        get => InputValue;
+        set
+        {
+            InputValue = value;
+            this.ErrorStatus = new ErrorStatus();
+            this.ErrorStatus.FieldID=InputID;
+            DateTime dtInpVal = Convert.ToDateTime(InputValue);
+            if (IsRequired && (string.IsNullOrEmpty(InputValue) || InputValue.Length == 0))
+            {
+                this.ErrorStatus.Error = true;
+                this.ErrorStatus.ErrorMessage = "يجب إدخال " + TitleProp;
+            }
+            if (!string.IsNullOrEmpty(InputValue))
+                this.ErrorStatus.Done = !this.ErrorStatus.Error;
+            EvGetValue.InvokeAsync(InputValue);
+            EvErrorStatus.InvokeAsync(this.ErrorStatus);
+        }
+    }
+    bool mouseOver { get; set; } = false;
+    protected override void OnInitialized()
+    {
+        this.ErrorStatus = new ErrorStatus();
+        if (!string.IsNullOrEmpty(DifrenceDate))
+        {
+            int difY = Convert.ToInt16(DifrenceDate.Substring(0, 2));
+            int difM = Convert.ToInt16(DifrenceDate.Substring(2, 2));
+            int difD = Convert.ToInt16(DifrenceDate.Substring(4, 2));
+            int y = DateTime.Now.Year - difY;
+            int m = DateTime.Now.Month - difM;
+            int d = DateTime.Now.Day - difD;
+            string strY = SerialCode.CovnertCode(4, y.ToString());
+            string strM = SerialCode.CovnertCode(2, m.ToString());
+            string strD = SerialCode.CovnertCode(2, d.ToString());
+            this.MaxDate = strY + "-" + strM + "-" + strD;
+            this.txtData = MaxDate;
+            this.ErrorStatus.FieldID = InputID;
+            this.EvErrorStatus.InvokeAsync(ErrorStatus); 
+        }
+
+    }
+}

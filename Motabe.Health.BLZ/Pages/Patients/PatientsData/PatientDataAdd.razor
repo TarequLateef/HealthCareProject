@@ -1,0 +1,11 @@
+﻿@page "/SetPatientData"
+@page "/SetPatientData/{pBaseID}"
+
+<CreateForm ModalFormProp="ShowAsModal" EvSave="SavePat" HideModal="@(!ShowAsModal)"
+            EvExit="@(()=>EvHide.InvokeAsync(true))">
+    <ElemOperation>
+        <PatientDataOpser PatientItem="@_pBaseServ.Item"
+                          EvErrList="@((errList)=>_pDetServ.ErrorList=errList)"
+                          EvPatItem="@((pdItem)=>_pDetServ.Item=pdItem)" />
+    </ElemOperation>
+</CreateForm>

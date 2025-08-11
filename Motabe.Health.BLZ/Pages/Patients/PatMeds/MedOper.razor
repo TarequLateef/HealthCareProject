@@ -1,0 +1,15 @@
+﻿@using global::Health.Motabea.Core.DTOs.Services
+
+<CreateForm ModalFormProp="true" DisableSave="@_medServ.ErrorList.Any(b=>!b.Done)"
+            EvSave="SaveMed">
+    <ElemOperation>
+        <TextInput TitleProp="Medical" InputValue="@_medServ.Item.MedName"
+                   PlaceHolder="New Analysis"
+                   EvErrorStatus="@_medServ.ReloadErrors" InputID="@MedFields.Name"
+                   EvGetValue="@((name)=>_medServ.Item.MedName=name)" />
+        <TextInput TitleProp="Medical Type" InputValue="@_medServ.Item.MedType"
+                   EvErrorStatus="@_medServ.ReloadErrors" InputID="@MedFields.Type"
+                   EvGetValue="@((meas)=>_medServ.Item.MedType=meas)"
+                   WithLimitList="true" LimitList="MedList" />
+    </ElemOperation>
+</CreateForm>

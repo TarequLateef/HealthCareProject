@@ -1,0 +1,54 @@
+﻿
+<form class="row ps-4 me-3 @(ModalFormProp?"":"hsb-form-shadow pe-4 pb-3 pt-3")"
+      @onsubmit="@(()=>EvSave.InvokeAsync())">
+    <div class="row justify-content-start hsb-bg-title pb-2 pt-2 ">
+        <div class="col-md-1">
+            @if (!string.IsNullOrEmpty(ListLinkProp))
+            {
+                <ListBtn TitleProp="عرض القائمة" ListLinkProp="@ListLinkProp"
+                         WithSearchProp="@WithSearchList" />
+            }
+            else if(ListCount>0)
+            {
+                @ElemListModal
+            }
+        </div>
+    </div>
+    <div class="row hsb-form-back pt-4  pe-5">
+        @ElemOperation
+    </div>
+    <div class="row justify-content-end pb-2 pt-2 " style="background-color:#cad7c0;">
+        <div class="col-md-5 offset-md-5">
+            <p>@FormMessage</p>
+        </div>
+        <div class="col-md-1">
+            <SaveBtn ModalAttr="@(HideModal?modalAttr:new Dictionary<string, object>())"
+                     IsDisable="@DisableSave" />
+        </div>
+        <div class="col-md-1">
+            <CancelBtn ModalAttr="@(HideModal?modalAttr:new Dictionary<string, object>())"
+                       EvCancel="Exit" />
+        </div>
+    </div>
+
+</form>
+
+@code{
+    [Parameter] public bool ModalFormProp { get; set; } = false;
+    [Parameter] public string ListLinkProp { get; set; } = string.Empty;
+    [Parameter] public string ExitLink { get; set; } = string.Empty;
+    [Parameter] public string FormMessage { get; set; } = string.Empty;
+    [Parameter] public int ListCount { get; set; } = 0;
+    [Parameter] public bool DisableSave { get; set; } = false;
+    [Parameter] public bool WithSearchList { get; set; } = false;
+    [Parameter] public bool HideModal { get; set; } = true;
+    [Parameter] public RenderFragment ElemOperation { get; set; }
+    [Parameter] public RenderFragment ElemListModal { get; set; }
+    [Parameter] public EventCallback EvSave { get; set; }
+    [Parameter] public EventCallback<string> EvExit { get; set; }
+    Dictionary<string, object> modalAttr { get; set; } = new()
+    {
+            {"data-bs-dismiss","modal"}
+    };
+    async Task Exit() => await EvExit.InvokeAsync(ExitLink);
+}

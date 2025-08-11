@@ -1,0 +1,10 @@
+﻿<a class="btn hsb-save" @onmouseout=@(()=>mouseOver=false) @onmouseover=@(()=>mouseOver=true)
+   title="طباعة" 
+   style="@(!mouseOver?"color: #fffad4;background-color: #7fadfd;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;":"color: #fffad4;background-color: #7fadfd;")">
+    <span class="fas fa-print"></span>
+</a>
+
+@code {
+    bool mouseOver { get; set; } = false;
+
+}

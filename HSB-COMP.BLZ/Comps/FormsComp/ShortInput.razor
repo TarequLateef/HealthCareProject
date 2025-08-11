@@ -1,0 +1,58 @@
+﻿
+<div class="@(!SubContent?"input-group input-group-md mb-3 mt-3":"input-group-text")">
+    @if (string.IsNullOrEmpty(AddLinkProp))
+    {
+        <span role="button" class="btn" type="button" @onmouseout=@(()=>mouseOver=false)
+              @onmouseover=@(()=>mouseOver=true) @onclick=@(()=>{showInput=true;EvOperation.InvokeAsync(showInput);})
+              style="@(!mouseOver?"color: #f8efc8;background-color: #6a361d;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"color: #6a361d;background-color: #f8efc8;")" title="@TitleProp">
+            <span class="fas @(BtnType==ShortInputType.NewBtn?"fa-plus-circle":"fa-search")"></span>
+        </span>
+    }
+    else
+    {
+        <a class="btn" type="button" @onmouseout=@(()=>mouseOver=false)
+              @onmouseover=@(()=>mouseOver=true) href="@AddLinkProp"
+              style="@(!mouseOver?"color: #f8efc8;background-color: #6a361d;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"color: #6a361d;background-color: #f8efc8;")" title="@TitleProp">
+            <span class="fas @(BtnType==ShortInputType.NewBtn?"fa-plus-circle":"fa-search")"></span>
+        </a>
+    }
+    @if (showInput)
+    {
+        if (WithTitle)
+        {
+            <span class="input-group-text" style="background-color:#0f482e; color:#e5e5b4;">
+                @TitleProp
+            </span>
+        }
+        <input type="@InputData" class="form-control" disabled="@(DisableInput)"
+               aria-label="Sizing example input" @bind="@txtData" maxlength="@(FieldLength==0?100:FieldLength)"
+               placeholder="@(InputData == InputType.EMailType?"username@domain.com":PlaceHolder)"/>
+        @if (errorStatus.Done && WithTitle)
+        {
+            <span class="input-group-text" style="background-color:#c9ddd4; color:#21991f;">
+                <span class="fas fa-check-circle"></span>
+            </span>
+        }
+        @if (!string.IsNullOrEmpty(errorStatus.ErrorMessage))
+        {
+            <div class="valid-feedback" style="display:inline-block">@errorStatus.ErrorMessage</div>
+        }
+        <span role="button" class="@(errorStatus.Error?"disabled":string.Empty) btn "
+              @onmouseout=@(()=>saveOver=false) @onmouseover=@(()=>saveOver=true)
+              style="@(!saveOver?"color: #dfdfa1;background-color: #57a349;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"color: #57a349;background-color: #dfdfa1; ")" title="حفظ" @onclick=@(()=>{showInput=false;
+          EvDone.InvokeAsync(showInput);})>
+            <span class="fas fa-check"></span>
+        </span>
+        <span role="button" class="btn " title="الغاء"
+              style="@(!exitOver?"background-color: #1b2f4c;color: #F4DEB3;box-shadow: rgb(112 93 116 / 44%) 0px 2px 4px 0px, rgb(68 86 94 / 55%) 0px 2px 16px 0px;"
+        :"background-color: #F4DEB3;color: #1b2f4c;")" 
+              @onmouseover=@(()=>exitOver=true)
+              @onmouseout=@(()=>exitOver=false) 
+              @onclick="@(()=>{showInput=false;EvOperation.InvokeAsync(showInput);EvCancel.InvokeAsync(showInput);})" >
+            <span class="fas fa-times-circle"></span>
+        </span>
+    }
+</div>

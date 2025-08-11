@@ -1,0 +1,29 @@
+﻿
+<ul class="nav nav-pills hsb-tab-nav">
+    @foreach (var tab in TabList)
+    {
+        <li class="nav-item">
+            <a role="button" class="nav-link hsb-tab-elem @(CurrTab==tab?"hsb-active-elem":"")"
+               @onclick=@(()=>{
+                   CurrTab=tab;
+                   EvChangeTab.InvokeAsync(CurrTab);
+               })>
+                @tab
+            </a>
+        </li>
+    }
+    @* <li class="nav-item">
+        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+    </li> *@
+</ul>
+
+@code{
+    [Parameter] public string[] TabList { get; set; }
+    [Parameter] public EventCallback<string> EvChangeTab{ get; set; }
+    [Parameter] public string CurrTab { get; set; } = string.Empty;
+    protected override void OnInitialized()
+    {
+        CurrTab = TabList[0];
+    }
+
+}

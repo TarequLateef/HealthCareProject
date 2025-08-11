@@ -1,0 +1,118 @@
+﻿@inherits LayoutComponentBase
+@using GeneralMotabea.Core.DTOs
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.AspNetCore.SignalR.Client;
+@using Motabe.Health.BLZ.Data
+@using Motabe.Health.BLZ.Data.Interface
+@using Motabe.Health.BLZ.Data.Services.Patients
+@using Motabe.Health.BLZ.Data.Services.Security
+
+<PageTitle>متابع العيادة</PageTitle>
+
+<div class="page">
+
+    <main>
+        <nav class="navbar bg-body-tertiary hsb-nav-back">
+            <div class="container-fluid ">
+                <ul class="nav">
+                    @if(Auther.Roles is not null)
+                    {
+                        if (Auther.Roles.Any(r => r==RolesList.Doc_Ass))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(currMenuItem==ListItems.EnBook || currMenuItem==ListItems.ArBook?"active":"")"
+                                   aria-expanded="false" @onclick="BookSelect"
+                                   href="@(_bServ.AddWin)">
+                                    @(authDocRole? ListItems.EnBook:ListItems.ArBook)
+                                </a>
+                            </li>
+                        }
+                        if (Auther.Roles.Any(r => r==RolesList.Doc))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(currMenuItem==ListItems.EnBList || currMenuItem==ListItems.ArBList?"active":"")"
+                                   aria-expanded="false" @onclick="BListSelect"
+                                   href="@(_bServ.ListWin)">
+                                    @(authDocRole? ListItems.EnBList:ListItems.ArBList)
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+                <form class="d-flex" role="button">
+                    <!-- Example split danger button -->
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-light">
+                            مرحبا @(_authServ.Item.UserName)
+                        </button>
+                        <button type="button" class="btn btn-light dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="visually-hidden">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item"
+                                   href="@(_upServ.UserWinUrl+_upServ.UpdateWin+"/"+_authServ.Item.UserID)">
+                                   كلمة المرور
+                               </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item"
+                                   href="@(_udServ.UserWinUrl+_udServ.ListWin+"/"+_authServ.Item.UserID)">
+                                    ادارة المستخدمين
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <div role="link" class="dropdown-item" @onclick="LogoutUser">
+                                    تسجيل خروج
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+        </nav>
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code{
+    #region User Mnagment
+    [Inject] ICookieService _cook { get; set; }
+    [Inject] AutherService _authServ { get; set; }
+    [Inject] UserDataService _udServ { get; set; }
+    [Inject] UserPassService _upServ { get; set; }
+    [Inject] NavigationManager layNav { get; set; }
+
+    [Parameter] public AutherData Auther { get; set; } = new AutherData();
+    #endregion
+    [Inject] BookingService _bServ { get; set; }
+    [Inject] PatientBaseService _pBaseSer { get; set; }
+    bool authDocRole => Auther.Roles.Any(r => r == RolesList.Doc);
+    HubConnection _connection;
+    string currMenuItem = string.Empty;
+    protected override async Task OnInitializedAsync()
+    {
+        _authServ.Item = new AutherData();
+        _authServ.Item = await _authServ.ReadLogData();
+        //
+        Auther = _authServ.Item;
+
+    }
+    #region Click Ev
+    void BookSelect() =>
+       currMenuItem = authDocRole ? ListItems.EnBook : ListItems.ArBook;
+    void BListSelect() =>
+        currMenuItem = authDocRole ? ListItems.EnBList : ListItems.ArBList;
+    #endregion
+    async Task LogoutUser()
+    {
+        Auther=new AutherData { UserLoginID="0", UserID="0" };
+        await _cook.SetValue(CookieData.CurrID, Auther.UserLoginID, 0);
+        layNav.NavigateTo(_authServ.UserWinUrl, true);
+    }
+}
+
+
